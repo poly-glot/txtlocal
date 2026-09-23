@@ -1,0 +1,56 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v codegraph >/dev/null 2>&1 && (codegraph sync >/dev/null 2>&1 &) || true"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v rtk >/dev/null 2>&1 || exit 0; exec rtk hook claude"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v codegraph >/dev/null 2>&1 && codegraph prompt-hook || true"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(aws dynamodb *)",
+      "Bash(bash scripts/*)",
+      "Bash(codegraph *)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git status*)",
+      "Bash(pnpm *)",
+      "Bash(rtk *)",
+      "Bash(uv *)",
+      "Bash(zg *)",
+      "mcp__codegraph__*",
+      "mcp__zvec-grep__*"
+    ],
+    "deny": [
+      "Bash(git push*)",
+      "Bash(terraform *)"
+    ]
+  }
+}

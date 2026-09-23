@@ -1,0 +1,5 @@
+.purchase {
+  composes: button from "@/components/Button/Button.module.css";
+  text-decoration: none;
+  white-space: nowrap;
+}

@@ -1,0 +1,10 @@
+.form {
+  & + & {
+    border-top: var(--border-width-hairline) solid var(--border);
+    padding-top: var(--space-8);
+  }
+}
+
+.actions {
+  composes: actions from "@/components/SettingsForm/SettingsForm.module.css";
+}

@@ -1,0 +1,11 @@
+.copy {
+  composes: secondary from "@/components/Text/Text.module.css";
+}
+
+.addRow {
+  align-self: flex-start;
+}
+
+.support {
+  composes: helper from "@/components/Input/Input.module.css";
+}

@@ -1,0 +1,15 @@
+.columns {
+  align-items: start;
+  display: grid;
+  gap: var(--space-8);
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  @container panel (max-width: 960px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.steps {
+  composes: stack from "@/components/Stack/Stack.module.css";
+  min-width: 0;
+}

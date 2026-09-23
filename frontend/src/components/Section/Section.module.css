@@ -1,0 +1,28 @@
+.section {
+  align-items: start;
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: 200px minmax(0, 1fr);
+
+  & + & {
+    border-top: var(--border-width-hairline) solid var(--border);
+    padding-top: var(--space-8);
+  }
+
+  @container panel (max-width: 720px) {
+    gap: var(--space-4);
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.title {
+  font: var(--type-heading-md);
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}

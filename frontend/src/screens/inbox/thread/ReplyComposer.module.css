@@ -1,0 +1,30 @@
+.composer {
+  border-top: var(--border-width-hairline) solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+}
+
+.hint {
+  composes: helper from "@/components/Input/Input.module.css";
+}
+
+.label {
+  composes: label from "@/components/Input/Input.module.css";
+}
+
+.textarea {
+  composes: input from "@/components/Input/Input.module.css";
+  padding: var(--space-2) var(--space-3);
+  resize: vertical;
+}
+
+.footer {
+  composes: header from "@/components/Panel/Panel.module.css";
+  gap: var(--space-3);
+}
+
+.counter {
+  composes: helper from "@/components/Input/Input.module.css";
+}

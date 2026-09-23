@@ -1,0 +1,9 @@
+.fields {
+  composes: stack from "@/components/Stack/Stack.module.css";
+}
+
+.amounts {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}

@@ -1,0 +1,12 @@
+.open {
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+
+  &:hover {
+    color: var(--brand);
+  }
+}

@@ -1,0 +1,27 @@
+.field {
+  composes: field from "@/components/Input/Input.module.css";
+}
+
+.label {
+  composes: label from "@/components/Input/Input.module.css";
+}
+
+.textarea {
+  composes: input from "@/components/Input/Input.module.css";
+  padding: var(--space-3);
+  resize: vertical;
+}
+
+.counter {
+  composes: helper from "@/components/Input/Input.module.css";
+}
+
+.note {
+  composes: helper from "@/components/Input/Input.module.css";
+  font-style: italic;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}

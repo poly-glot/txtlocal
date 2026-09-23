@@ -1,0 +1,68 @@
+.card {
+  composes: card from "@/components/Card/Card.module.css";
+  padding: var(--space-6);
+}
+
+.title {
+  composes: title from "@/components/Section/Section.module.css";
+}
+
+.subtitle {
+  color: var(--ink-secondary);
+  font: var(--type-body-sm);
+  margin: var(--space-1) 0 var(--space-2);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  align-items: flex-start;
+  display: flex;
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+
+  & + & {
+    border-block-start: var(--border-width-hairline) solid var(--border);
+  }
+}
+
+.mark {
+  align-items: center;
+  block-size: 20px;
+  border: var(--border-width-hairline) solid var(--border-input);
+  border-radius: var(--radius-full);
+  display: flex;
+  flex-shrink: 0;
+  inline-size: 20px;
+  justify-content: center;
+
+  &[data-done="true"] {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: var(--on-brand);
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+}
+
+.step {
+  font: var(--type-body-strong);
+}
+
+.note {
+  color: var(--ink-muted);
+  font: var(--type-body-sm);
+}
+
+.switch {
+  composes: note from "@/components/Text/Text.module.css";
+  border-block-start: var(--border-width-hairline) solid var(--border);
+  padding-block-start: var(--space-4);
+}

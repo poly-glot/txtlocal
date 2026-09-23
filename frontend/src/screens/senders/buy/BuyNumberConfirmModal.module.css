@@ -1,0 +1,3 @@
+.copy {
+  composes: muted from "@/components/Text/Text.module.css";
+}

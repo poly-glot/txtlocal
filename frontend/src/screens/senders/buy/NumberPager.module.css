@@ -1,0 +1,20 @@
+.footer {
+  align-items: center;
+  color: var(--ink-muted);
+  display: flex;
+  flex-wrap: wrap;
+  font: var(--type-body-sm);
+  gap: var(--space-3);
+  justify-content: space-between;
+}
+
+.note {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}

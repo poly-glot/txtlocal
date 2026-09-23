@@ -1,0 +1,7 @@
+.sections {
+  composes: form from "@/components/SettingsForm/SettingsForm.module.css";
+}
+
+.info {
+  composes: note from "@/components/Text/Text.module.css";
+}

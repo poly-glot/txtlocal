@@ -1,0 +1,3 @@
+.heading {
+  composes: header from "@/components/Panel/Panel.module.css";
+}

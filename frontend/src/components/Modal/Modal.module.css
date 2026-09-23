@@ -1,0 +1,52 @@
+.overlay {
+  align-items: center;
+  background: var(--scrim);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: var(--space-4);
+  position: fixed;
+  z-index: 10;
+}
+
+.dialog {
+  composes: card from "@/components/Card/Card.module.css";
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  margin: 0;
+  max-width: 32rem;
+  padding: 0;
+  position: static;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.header {
+  border-bottom: var(--border-width-hairline) solid var(--border);
+  font: var(--type-heading-md);
+  padding: var(--space-4) var(--space-6);
+}
+
+.title {
+  font: var(--type-heading-md);
+  margin: 0;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+}
+
+.footer {
+  border-top: var(--border-width-hairline) solid var(--border);
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  padding: var(--space-4) var(--space-6);
+}

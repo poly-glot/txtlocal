@@ -1,0 +1,12 @@
+.icon {
+  fill: none;
+  flex-shrink: 0;
+  stroke: currentcolor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+
+  &[data-size="12"] {
+    stroke-width: 3;
+  }
+}

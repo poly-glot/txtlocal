@@ -1,0 +1,3 @@
+.summary {
+  composes: note from "@/components/Text/Text.module.css";
+}

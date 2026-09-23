@@ -1,0 +1,15 @@
+.toolbar {
+  align-items: center;
+  background: var(--surface-selected);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+}
+
+.count {
+  font: var(--type-body-strong);
+  margin: 0;
+  margin-right: auto;
+}

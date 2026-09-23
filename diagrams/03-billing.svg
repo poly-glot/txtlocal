@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="billing-title billing-desc">
+  <title id="billing-title">Top-ups, recharges and renewals</title>
+  <desc id="billing-desc">The browser pays on the Stripe Checkout page the api creates; Stripe's signed webhook credits the balance; auto-recharge and the daily renewals charge saved cards off-session through billing-charge.</desc>
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;family=Rozha+One&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap');</style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#656565"/></marker>
+    <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f8a41d"/></marker>
+    <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#010101"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  
+
+  <path d="M 200,136 H 280" fill="none" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+  <path d="M 440,136 H 520" fill="none" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+  <path d="M 120,104 V 80 Q 120,72 128,72 H 592 Q 600,72 600,80 V 104" fill="none" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <path d="M 680,136 H 760" fill="none" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <path d="M 840,168 V 232" fill="none" stroke="#f8a41d" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+  <path d="M 360,168 V 360" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 200,392 H 280" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 440,392 H 592 Q 600,392 600,384 V 168" fill="none" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+  <path d="M 120,424 V 448 Q 120,456 128,456 H 832 Q 840,456 840,448 V 296" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+  <rect x="214" y="116" width="52" height="12" rx="2" fill="#ffffff"/>
+  <text x="240" y="125" fill="#010101" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">CHECKOUT</text>
+  <rect x="456" y="116" width="48" height="12" rx="2" fill="#ffffff"/>
+  <text x="480" y="125" fill="#010101" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">SESSION</text>
+  <rect x="326" y="52" width="68" height="12" rx="2" fill="#ffffff"/>
+  <text x="360" y="61" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">HOSTED PAGE</text>
+  <rect x="696" y="116" width="48" height="12" rx="2" fill="#ffffff"/>
+  <text x="720" y="125" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">WEBHOOK</text>
+  <rect x="848" y="194" width="40" height="12" rx="2" fill="#ffffff"/>
+  <text x="868" y="203" fill="#c44900" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">CREDIT</text>
+  <rect x="368" y="258" width="52" height="12" rx="2" fill="#ffffff"/>
+  <text x="394" y="267" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">RECHARGE</text>
+  <rect x="214" y="372" width="52" height="12" rx="2" fill="#ffffff"/>
+  <text x="240" y="381" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">RECHARGE</text>
+  <rect x="608" y="274" width="68" height="12" rx="2" fill="#ffffff"/>
+  <text x="642" y="283" fill="#010101" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">OFF-SESSION</text>
+  <rect x="448" y="436" width="64" height="12" rx="2" fill="#ffffff"/>
+  <text x="480" y="445" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">RENT DEBIT</text>
+
+  <rect x="40" y="104" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="40" y="104" width="160" height="64" rx="6" fill="#656565" fill-opacity="0.10" stroke="#6e6e6e" stroke-width="1"/>
+  <rect x="48" y="110" width="28" height="12" rx="2" fill="none" stroke="#6e6e6e" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="62" y="119" fill="#6e6e6e" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">USER</text>
+  <text x="120" y="140" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">Browser</text>
+  <text x="120" y="156" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">Top Up · Manage Cards</text>
+
+  <rect x="280" y="104" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="280" y="104" width="160" height="64" rx="6" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <rect x="288" y="110" width="28" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="302" y="119" fill="#010101" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">HTTP</text>
+  <text x="360" y="140" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">api</text>
+  <text x="360" y="156" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">Checkout Sessions</text>
+
+  <rect x="520" y="104" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="520" y="104" width="160" height="64" rx="6" fill="#010101" fill-opacity="0.03" stroke="#010101" stroke-opacity="0.30" stroke-width="1"/>
+  <rect x="528" y="110" width="24" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.22" stroke-width="0.8"/>
+  <text x="540" y="119" fill="#6e6e6e" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">PAY</text>
+  <text x="600" y="140" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">Stripe</text>
+  <text x="600" y="156" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">Checkout · PaymentIntents</text>
+
+  <rect x="760" y="104" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="760" y="104" width="160" height="64" rx="6" fill="#f8a41d" fill-opacity="0.10" stroke="#f8a41d" stroke-width="1"/>
+  <rect x="768" y="110" width="28" height="12" rx="2" fill="none" stroke="#f8a41d" stroke-opacity="0.50" stroke-width="0.8"/>
+  <text x="782" y="119" fill="#c44900" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">HTTP</text>
+  <text x="840" y="140" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">stripe-webhook</text>
+  <text x="840" y="156" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">verify · credit once</text>
+
+  <rect x="760" y="232" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="760" y="232" width="160" height="64" rx="6" fill="#010101" fill-opacity="0.05" stroke="#656565" stroke-width="1"/>
+  <rect x="768" y="238" width="20" height="12" rx="2" fill="none" stroke="#656565" stroke-opacity="0.50" stroke-width="0.8"/>
+  <text x="778" y="247" fill="#656565" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">DB</text>
+  <text x="840" y="268" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">DynamoDB</text>
+  <text x="840" y="284" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">balance · ledger rows</text>
+
+  <rect x="40" y="360" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="40" y="360" width="160" height="64" rx="6" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <rect x="48" y="366" width="28" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="62" y="375" fill="#010101" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">CRON</text>
+  <text x="120" y="396" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">billing-renewals</text>
+  <text x="120" y="412" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">daily 06:30 UTC</text>
+
+  <rect x="280" y="360" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="280" y="360" width="160" height="64" rx="6" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <rect x="288" y="366" width="24" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="300" y="375" fill="#010101" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">SQS</text>
+  <text x="360" y="396" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">billing-charge</text>
+  <text x="360" y="412" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">off-session · idempotent</text>
+
+  <line x1="40" y1="532" x2="920" y2="532" stroke="#010101" stroke-opacity="0.10" stroke-width="0.8"/>
+  <text x="40" y="548" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" letter-spacing="0.18em">LEGEND</text>
+  <rect x="40" y="560" width="14" height="10" rx="2" fill="#f8a41d" fill-opacity="0.10" stroke="#f8a41d" stroke-width="1"/>
+  <text x="60" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Focal</text>
+  <rect x="108" y="560" width="14" height="10" rx="2" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <text x="128" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Lambda</text>
+  <rect x="184" y="560" width="14" height="10" rx="2" fill="#010101" fill-opacity="0.05" stroke="#656565" stroke-width="1"/>
+  <text x="204" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Store</text>
+  <rect x="252" y="560" width="14" height="10" rx="2" fill="#010101" fill-opacity="0.03" stroke="#010101" stroke-opacity="0.30" stroke-width="1"/>
+  <text x="272" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">External</text>
+  <rect x="336" y="560" width="14" height="10" rx="2" fill="#656565" fill-opacity="0.10" stroke="#6e6e6e" stroke-width="1"/>
+  <text x="356" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Client</text>
+  <line x1="412" y1="565" x2="440" y2="565" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+  <text x="448" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">API call</text>
+  <line x1="512" y1="565" x2="540" y2="565" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <text x="548" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Hand-off</text>
+  <line x1="612" y1="565" x2="640" y2="565" stroke="#f8a41d" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+  <text x="648" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Primary write</text>
+  <line x1="736" y1="565" x2="764" y2="565" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <text x="772" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Async event</text>
+</svg>

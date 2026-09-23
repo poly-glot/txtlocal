@@ -1,0 +1,13 @@
+.page {
+  composes: stack from "@/components/Stack/Stack.module.css";
+}
+
+.comingSoon {
+  background: var(--warning-surface);
+  border: var(--border-width-hairline) solid var(--warning-border);
+  border-radius: var(--radius-md);
+  color: var(--warning-ink);
+  font: var(--type-body-strong);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+}

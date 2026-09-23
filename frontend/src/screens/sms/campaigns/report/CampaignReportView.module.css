@@ -1,0 +1,46 @@
+.actions {
+  align-items: center;
+  display: flex;
+  gap: var(--space-3);
+}
+
+.when {
+  composes: secondary from "@/components/Text/Text.module.css";
+}
+
+.tiles {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  margin: 0;
+}
+
+.tile {
+  composes: card from "@/components/Card/Card.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-5);
+}
+
+.term {
+  color: var(--ink-muted);
+  font: var(--type-caption-caps);
+  letter-spacing: var(--tracking-caption-caps);
+  text-transform: uppercase;
+}
+
+.value {
+  color: var(--ink);
+  font: var(--type-stat-number);
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.note {
+  composes: helper from "@/components/Input/Input.module.css";
+}
+
+.error {
+  composes: error from "@/components/StatusMessage/StatusMessage.module.css";
+}

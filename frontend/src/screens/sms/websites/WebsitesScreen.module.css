@@ -1,0 +1,22 @@
+.copy {
+  composes: lead from "@/components/Text/Text.module.css";
+}
+
+.empty {
+  composes: empty from "@/components/Table/Table.module.css";
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.emptyTitle {
+  composes: title from "@/components/Section/Section.module.css";
+  color: var(--ink);
+}
+
+.learnMore {
+  color: var(--brand);
+  font: var(--type-link);
+  margin: 0;
+}

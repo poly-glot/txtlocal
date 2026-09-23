@@ -1,0 +1,16 @@
+.codegraph/
+.DS_Store
+.env
+.idea/
+.import_linter_cache/
+.local/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+.zvec-grep/
+__pycache__/
+build/
+dist/
+frontend/dist/
+node_modules/

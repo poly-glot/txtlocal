@@ -1,0 +1,27 @@
+.tiles {
+  composes: card from "@/components/Card/Card.module.css";
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  padding: var(--space-6);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-1);
+  justify-content: flex-end;
+  margin: 0;
+}
+
+.label {
+  color: var(--ink-muted);
+  font: var(--type-caption-caps);
+  letter-spacing: var(--tracking-caption-caps);
+  text-transform: uppercase;
+}
+
+.value {
+  font: var(--type-stat-number);
+  font-variant-numeric: tabular-nums;
+}

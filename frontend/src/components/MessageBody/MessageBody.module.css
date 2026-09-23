@@ -1,0 +1,25 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  composes: label from "@/components/Input/Input.module.css";
+}
+
+.textarea {
+  composes: input from "@/components/Input/Input.module.css";
+  block-size: 160px;
+  inline-size: 100%;
+  padding: var(--space-3);
+  resize: vertical;
+}
+
+.footer {
+  composes: helper from "@/components/Input/Input.module.css";
+  align-items: center;
+  display: flex;
+  font-variant-numeric: tabular-nums;
+  gap: var(--space-1);
+}

@@ -1,0 +1,23 @@
+.row {
+  align-items: flex-end;
+  display: flex;
+  gap: var(--space-3);
+}
+
+.field {
+  flex: 1;
+  min-width: 0;
+}
+
+.preview {
+  composes: helper from "@/components/Input/Input.module.css";
+  margin: var(--space-1) 0 0;
+}
+
+.remove {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: var(--control-height);
+  min-width: var(--control-height);
+}

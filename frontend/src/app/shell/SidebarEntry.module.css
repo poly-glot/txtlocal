@@ -1,0 +1,66 @@
+.sublist {
+  composes: list from "./Sidebar.module.css";
+  margin-top: calc(var(--space-1) / 2);
+
+  & .row {
+    padding-left: var(--space-10);
+  }
+}
+
+.row {
+  align-items: center;
+  border-radius: var(--radius-md);
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  font: var(--type-body);
+  gap: var(--space-3);
+  height: 40px;
+  list-style: none;
+  padding: 0 var(--space-3);
+  text-decoration: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &:hover {
+    background: var(--surface-sunken);
+    color: var(--ink);
+  }
+
+  &[aria-current="page"] {
+    background: var(--surface-selected);
+    color: var(--brand);
+    font: var(--type-body-strong);
+
+    & .glyph {
+      color: inherit;
+    }
+  }
+}
+
+.glyph {
+  color: var(--ink-secondary);
+  display: inline-flex;
+}
+
+.label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  color: var(--ink-muted);
+  display: inline-flex;
+  transition: rotate 120ms ease;
+}
+
+.group {
+  &[open] .chevron {
+    rotate: 180deg;
+  }
+}

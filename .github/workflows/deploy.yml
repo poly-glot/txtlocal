@@ -1,0 +1,74 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: deploy
+
+env:
+  APP: txtlocal
+  AWS_REGION: eu-west-2
+  FUNCTIONS: api redirect stripe-webhook send-worker delivery-events inbound scheduler webhook-dispatch billing-charge billing-renewals rollup
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - run: uv python install
+      - run: uv sync --locked --no-dev
+      - run: uv export --locked --no-dev --no-hashes --no-emit-project -o requirements.txt
+      - run: |
+          uv pip install --python .venv/bin/python --python-platform aarch64-manylinux2014 --python-version 3.14 --only-binary :all: --target build/lambda -r requirements.txt
+      - run: |
+          cp -R src/txtlocal build/lambda/
+          find build/lambda/txtlocal -type d -name tests -prune -exec rm -rf {} +
+          rm build/lambda/txtlocal/shared/testing.py
+          (cd build/lambda && zip -qr ../lambda.zip . -x '*/__pycache__/*')
+          size=$(stat -c%s build/lambda.zip)
+          echo "lambda.zip: $size bytes"
+          [ "$size" -lt 52428800 ] || { echo "lambda.zip is over the 50 MB direct upload limit; switch update-function-code to --s3-bucket" >&2; exit 1; }
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+
+      - run: |
+          for f in $FUNCTIONS; do
+            aws lambda update-function-code --function-name "$APP-$f" --zip-file fileb://build/lambda.zip >/dev/null
+            echo "updated $APP-$f"
+          done
+
+      - uses: actions/setup-node@v4
+        if: hashFiles('frontend/package.json') != ''
+        with:
+          node-version: 22
+      - run: npm install -g pnpm@10
+        if: hashFiles('frontend/package.json') != ''
+      - run: pnpm --dir frontend install --frozen-lockfile
+        if: hashFiles('frontend/package.json') != ''
+      - run: pnpm --dir frontend build
+        if: hashFiles('frontend/package.json') != ''
+        env:
+          VITE_COGNITO_CLIENT_ID: ${{ vars.COGNITO_CLIENT_ID }}
+          VITE_COGNITO_DOMAIN: ${{ vars.COGNITO_DOMAIN }}
+          VITE_STRIPE_PUBLISHABLE_KEY: ${{ vars.STRIPE_PUBLISHABLE_KEY }}
+      - run: aws s3 sync frontend/dist "s3://${{ vars.SITES_BUCKET }}/txtlocal/" --delete
+        if: hashFiles('frontend/package.json') != ''
+      - run: aws cloudfront create-invalidation --distribution-id "${{ vars.DISTRIBUTION_ID }}" --paths '/*'
+        if: hashFiles('frontend/package.json') != ''

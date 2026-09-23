@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>txtlocal on AWS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;family=Rozha+One&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-accent: #f8a41d;
+      --color-ink: #010101;
+      --color-muted: #656565;
+      --color-paper: #ffffff;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --font-sans: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      --font-serif: 'Rozha One', Georgia, serif;
+    }
+
+    body {
+      align-items: center;
+      background: var(--color-paper);
+      color: var(--color-ink);
+      display: flex;
+      font-family: var(--font-sans);
+      justify-content: center;
+      min-height: 100vh;
+      padding: 3rem 2rem;
+    }
+
+    .frame { max-width: 1200px; width: 100%; }
+
+    .eyebrow {
+      color: var(--color-muted);
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      color: var(--color-ink);
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+
+    svg { display: block; min-width: 900px; width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Architecture · overview</p>
+    <h1>txtlocal on AWS</h1>
+
+    <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="architecture-overview-title architecture-overview-desc">
+      <title id="architecture-overview-title">txtlocal on AWS</title>
+      <desc id="architecture-overview-desc">Architecture overview: clients reach CloudFront, which forwards to the HTTP Lambdas; they and the background Lambdas share one DynamoDB table and call Cognito, Stripe and AWS End User Messaging.</desc>
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#656565"/></marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f8a41d"/></marker>
+        <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#010101"/></marker>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#ffffff"/>
+
+      <rect x="456" y="176" width="232" height="288" rx="8" fill="rgba(1,1,1,0.02)" stroke="rgba(1,1,1,0.10)" stroke-width="0.8"/>
+      <rect x="516" y="180" width="112" height="12" rx="2" fill="#ffffff"/>
+      <text x="572" y="189" fill="rgba(1,1,1,0.40)" font-size="7" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.14em">LAMBDA · PYTHON 3.14</text>
+
+      <path d="M 168,240 H 248" fill="none" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <path d="M 104,272 V 384" fill="none" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <path d="M 408,240 H 472" fill="none" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <path d="M 640,208 V 148 Q 640,140 648,140 H 744" fill="none" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <path d="M 744,116 H 336 Q 328,116 328,124 V 208" fill="none" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <path d="M 672,240 H 700 Q 708,240 708,248 V 308 Q 708,316 716,316 H 744" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 572,272 V 384" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 640,384 V 348 Q 640,340 648,340 H 744" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 672,416 H 744" fill="none" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+
+      <rect x="190" y="220" width="36" height="12" rx="2" fill="#ffffff"/>
+      <text x="208" y="229" fill="#010101" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">HTTPS</text>
+      <rect x="112" y="322" width="48" height="12" rx="2" fill="#ffffff"/>
+      <text x="136" y="331" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">SIGN IN</text>
+      <rect x="648" y="168" width="52" height="12" rx="2" fill="#ffffff"/>
+      <text x="674" y="177" fill="#010101" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">CHECKOUT</text>
+      <rect x="512" y="96" width="48" height="12" rx="2" fill="#ffffff"/>
+      <text x="536" y="105" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">WEBHOOK</text>
+      <rect x="580" y="322" width="52" height="12" rx="2" fill="#ffffff"/>
+      <text x="606" y="331" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">SQS JOBS</text>
+      <rect x="692" y="396" width="32" height="12" rx="2" fill="#ffffff"/>
+      <text x="708" y="405" fill="#010101" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">SEND</text>
+
+      <rect x="40" y="208" width="128" height="64" rx="6" fill="#ffffff"/>
+      <rect x="40" y="208" width="128" height="64" rx="6" fill="rgba(101,101,101,0.10)" stroke="#6e6e6e" stroke-width="1"/>
+      <rect x="48" y="214" width="28" height="12" rx="2" fill="none" stroke="rgba(110,110,110,0.40)" stroke-width="0.8"/>
+      <text x="62" y="223" fill="#6e6e6e" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">USER</text>
+      <text x="104" y="244" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">Clients</text>
+      <text x="104" y="260" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">browser · API client</text>
+
+      <rect x="40" y="384" width="128" height="64" rx="6" fill="#ffffff"/>
+      <rect x="40" y="384" width="128" height="64" rx="6" fill="rgba(1,1,1,0.03)" stroke="rgba(1,1,1,0.30)" stroke-width="1"/>
+      <rect x="48" y="390" width="28" height="12" rx="2" fill="none" stroke="rgba(1,1,1,0.22)" stroke-width="0.8"/>
+      <text x="62" y="399" fill="#6e6e6e" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">AUTH</text>
+      <text x="104" y="420" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">Cognito</text>
+      <text x="104" y="436" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">hosted UI · PKCE</text>
+
+      <rect x="248" y="208" width="160" height="64" rx="6" fill="#ffffff"/>
+      <rect x="248" y="208" width="160" height="64" rx="6" fill="rgba(1,1,1,0.03)" stroke="rgba(1,1,1,0.30)" stroke-width="1"/>
+      <rect x="256" y="214" width="28" height="12" rx="2" fill="none" stroke="rgba(1,1,1,0.22)" stroke-width="0.8"/>
+      <text x="270" y="223" fill="#6e6e6e" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">EDGE</text>
+      <text x="328" y="244" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">CloudFront</text>
+      <text x="328" y="260" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">site /api* /l* /public</text>
+
+      <rect x="472" y="208" width="200" height="64" rx="6" fill="#ffffff"/>
+      <rect x="472" y="208" width="200" height="64" rx="6" fill="rgba(248,164,29,0.10)" stroke="#f8a41d" stroke-width="1"/>
+      <rect x="480" y="214" width="28" height="12" rx="2" fill="none" stroke="rgba(248,164,29,0.50)" stroke-width="0.8"/>
+      <text x="494" y="223" fill="#c44900" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">HTTP</text>
+      <text x="572" y="244" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">HTTP functions</text>
+      <text x="572" y="260" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">api · redirect · stripe-webhook</text>
+
+      <rect x="472" y="384" width="200" height="64" rx="6" fill="#ffffff"/>
+      <rect x="472" y="384" width="200" height="64" rx="6" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+      <rect x="480" y="390" width="28" height="12" rx="2" fill="none" stroke="rgba(1,1,1,0.40)" stroke-width="0.8"/>
+      <text x="494" y="399" fill="#010101" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">JOBS</text>
+      <text x="572" y="420" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">Background functions</text>
+      <text x="572" y="436" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">8 Lambdas on SQS · SNS · cron</text>
+
+      <rect x="744" y="96" width="160" height="64" rx="6" fill="#ffffff"/>
+      <rect x="744" y="96" width="160" height="64" rx="6" fill="rgba(1,1,1,0.03)" stroke="rgba(1,1,1,0.30)" stroke-width="1"/>
+      <rect x="752" y="102" width="24" height="12" rx="2" fill="none" stroke="rgba(1,1,1,0.22)" stroke-width="0.8"/>
+      <text x="764" y="111" fill="#6e6e6e" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">PAY</text>
+      <text x="824" y="132" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">Stripe</text>
+      <text x="824" y="148" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">Checkout · PaymentIntents</text>
+
+      <rect x="744" y="296" width="160" height="64" rx="6" fill="#ffffff"/>
+      <rect x="744" y="296" width="160" height="64" rx="6" fill="rgba(248,164,29,0.10)" stroke="#f8a41d" stroke-width="1"/>
+      <rect x="752" y="302" width="20" height="12" rx="2" fill="none" stroke="rgba(248,164,29,0.50)" stroke-width="0.8"/>
+      <text x="762" y="311" fill="#c44900" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">DB</text>
+      <text x="824" y="332" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">DynamoDB</text>
+      <text x="824" y="348" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">shared table · txtlocal#</text>
+
+      <rect x="744" y="384" width="160" height="64" rx="6" fill="#ffffff"/>
+      <rect x="744" y="384" width="160" height="64" rx="6" fill="rgba(1,1,1,0.03)" stroke="rgba(1,1,1,0.30)" stroke-width="1"/>
+      <rect x="752" y="390" width="24" height="12" rx="2" fill="none" stroke="rgba(1,1,1,0.22)" stroke-width="0.8"/>
+      <text x="764" y="399" fill="#6e6e6e" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">SMS</text>
+      <text x="824" y="420" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">End User Messaging</text>
+      <text x="824" y="436" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">SMS v2 · SNS events</text>
+
+      <line x1="40" y1="532" x2="920" y2="532" stroke="rgba(1,1,1,0.10)" stroke-width="0.8"/>
+      <text x="40" y="548" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" letter-spacing="0.18em">LEGEND</text>
+      <rect x="40" y="560" width="14" height="10" rx="2" fill="rgba(248,164,29,0.10)" stroke="#f8a41d" stroke-width="1"/>
+      <text x="60" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Focal</text>
+      <rect x="108" y="560" width="14" height="10" rx="2" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+      <text x="128" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Lambda</text>
+      <rect x="184" y="560" width="14" height="10" rx="2" fill="rgba(1,1,1,0.03)" stroke="rgba(1,1,1,0.30)" stroke-width="1"/>
+      <text x="204" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">External</text>
+      <rect x="268" y="560" width="14" height="10" rx="2" fill="rgba(101,101,101,0.10)" stroke="#6e6e6e" stroke-width="1"/>
+      <text x="288" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Client</text>
+      <line x1="344" y1="565" x2="372" y2="565" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+      <text x="380" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">API call</text>
+      <line x1="444" y1="565" x2="472" y2="565" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <text x="480" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Hand-off</text>
+      <line x1="544" y1="565" x2="572" y2="565" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+      <text x="580" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Async event</text>
+    </svg>
+  </div>
+</body>
+</html>

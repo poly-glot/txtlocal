@@ -1,0 +1,3 @@
+.page {
+  composes: stack from "@/components/Stack/Stack.module.css";
+}

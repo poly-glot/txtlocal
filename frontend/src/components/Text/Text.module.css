@@ -1,0 +1,19 @@
+.muted {
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+.secondary {
+  color: var(--ink-secondary);
+  margin: 0;
+}
+
+.lead {
+  composes: secondary;
+  max-inline-size: 70ch;
+}
+
+.note {
+  composes: secondary;
+  font: var(--type-body-sm);
+}

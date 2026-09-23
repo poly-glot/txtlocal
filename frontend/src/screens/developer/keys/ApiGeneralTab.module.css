@@ -1,0 +1,37 @@
+.rows {
+  margin: 0;
+}
+
+.row {
+  align-items: baseline;
+  display: grid;
+  gap: var(--space-2) var(--space-6);
+  grid-template-columns: 200px minmax(0, 1fr);
+
+  & + & {
+    border-top: var(--border-width-hairline) solid var(--border);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+  }
+
+  @container panel (max-width: 720px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.term {
+  color: var(--ink-muted);
+  font: var(--type-caption-caps);
+  letter-spacing: var(--tracking-caption-caps);
+  text-transform: uppercase;
+}
+
+.detail {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.code {
+  composes: detail;
+  font-family: monospace;
+}

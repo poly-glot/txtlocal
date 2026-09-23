@@ -1,0 +1,11 @@
+.page {
+  composes: stack from "@/components/Stack/Stack.module.css";
+}
+
+.search {
+  composes: stack from "@/components/Stack/Stack.module.css";
+}
+
+.copy {
+  composes: lead from "@/components/Text/Text.module.css";
+}

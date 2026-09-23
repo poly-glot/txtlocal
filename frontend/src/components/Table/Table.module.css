@@ -1,0 +1,71 @@
+.scroll {
+  overflow-x: auto;
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.header {
+  background: var(--surface-sunken);
+  border-bottom: var(--border-width-hairline) solid var(--border);
+  color: var(--ink-muted);
+  font: var(--type-caption-caps);
+  letter-spacing: var(--tracking-caption-caps);
+  padding: var(--space-3);
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &[aria-sort="ascending"] .sortButton::after {
+    content: " ▲";
+  }
+
+  &[aria-sort="descending"] .sortButton::after {
+    content: " ▼";
+  }
+
+  &[data-align="end"] {
+    text-align: end;
+  }
+}
+
+.sortButton {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  letter-spacing: inherit;
+  padding: 0;
+  text-transform: inherit;
+
+  &:hover {
+    color: var(--ink);
+  }
+}
+
+.row:hover {
+  background: var(--surface-sunken);
+}
+
+.cell {
+  border-bottom: var(--border-width-hairline) solid var(--border);
+  font: var(--type-body);
+  padding: var(--space-3);
+  vertical-align: top;
+
+  &[data-align="end"] {
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    white-space: nowrap;
+  }
+}
+
+.empty {
+  composes: helper from "@/components/Input/Input.module.css";
+  background: var(--surface-sunken);
+  border-radius: var(--radius-md);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+}

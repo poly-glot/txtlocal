@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="analytics-title analytics-desc">
+  <title id="analytics-title">Counting clicks and usage from logs</title>
+  <desc id="analytics-desc">Tracked links are served by redirect behind CloudFront and counted from CloudFront's access logs through Athena; send and API events are counted from CloudWatch Logs; the nightly rollup writes day rows to the table the screens read.</desc>
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;family=Rozha+One&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap');</style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#656565"/></marker>
+    <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f8a41d"/></marker>
+    <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#010101"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  
+
+  <path d="M 200,136 H 280" fill="none" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+  <path d="M 440,136 H 520" fill="none" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+  <path d="M 680,136 H 832 Q 840,136 840,144 V 232" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 360,168 V 232" fill="none" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <path d="M 440,264 H 520" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 440,392 H 520" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 600,360 V 296" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 680,264 H 760" fill="none" stroke="#f8a41d" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+
+  <rect x="222" y="116" width="36" height="12" rx="2" fill="#ffffff"/>
+  <text x="240" y="125" fill="#010101" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">HTTPS</text>
+  <rect x="464" y="116" width="32" height="12" rx="2" fill="#ffffff"/>
+  <text x="480" y="125" fill="#010101" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">MISS</text>
+  <rect x="736" y="116" width="48" height="12" rx="2" fill="#ffffff"/>
+  <text x="760" y="125" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">GETITEM</text>
+  <rect x="368" y="194" width="68" height="12" rx="2" fill="#ffffff"/>
+  <text x="402" y="203" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">ACCESS LOGS</text>
+  <rect x="460" y="244" width="40" height="12" rx="2" fill="#ffffff"/>
+  <text x="480" y="253" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">CLICKS</text>
+  <rect x="448" y="372" width="64" height="12" rx="2" fill="#ffffff"/>
+  <text x="480" y="381" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">JSON LINES</text>
+  <rect x="608" y="322" width="80" height="12" rx="2" fill="#ffffff"/>
+  <text x="648" y="331" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">LOGS INSIGHTS</text>
+  <rect x="694" y="244" width="52" height="12" rx="2" fill="#ffffff"/>
+  <text x="720" y="253" fill="#c44900" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">DAY ROWS</text>
+
+  <rect x="40" y="104" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="40" y="104" width="160" height="64" rx="6" fill="#656565" fill-opacity="0.10" stroke="#6e6e6e" stroke-width="1"/>
+  <rect x="48" y="110" width="28" height="12" rx="2" fill="none" stroke="#6e6e6e" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="62" y="119" fill="#6e6e6e" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">USER</text>
+  <text x="120" y="140" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">Recipient</text>
+  <text x="120" y="156" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">taps a tracked link</text>
+
+  <rect x="280" y="104" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="280" y="104" width="160" height="64" rx="6" fill="#010101" fill-opacity="0.03" stroke="#010101" stroke-opacity="0.30" stroke-width="1"/>
+  <rect x="288" y="110" width="28" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.22" stroke-width="0.8"/>
+  <text x="302" y="119" fill="#6e6e6e" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">EDGE</text>
+  <text x="360" y="140" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">CloudFront</text>
+  <text x="360" y="156" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">/l* · cached 5 min</text>
+
+  <rect x="520" y="104" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="520" y="104" width="160" height="64" rx="6" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <rect x="528" y="110" width="28" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="542" y="119" fill="#010101" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">HTTP</text>
+  <text x="600" y="140" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">redirect</text>
+  <text x="600" y="156" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">one GetItem · 302</text>
+
+  <rect x="280" y="232" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="280" y="232" width="160" height="64" rx="6" fill="#010101" fill-opacity="0.05" stroke="#656565" stroke-width="1"/>
+  <rect x="288" y="238" width="24" height="12" rx="2" fill="none" stroke="#656565" stroke-opacity="0.50" stroke-width="0.8"/>
+  <text x="300" y="247" fill="#656565" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">SQL</text>
+  <text x="360" y="268" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">Athena</text>
+  <text x="360" y="284" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">cloudfront_logs table</text>
+
+  <rect x="520" y="232" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="520" y="232" width="160" height="64" rx="6" fill="#f8a41d" fill-opacity="0.10" stroke="#f8a41d" stroke-width="1"/>
+  <rect x="528" y="238" width="28" height="12" rx="2" fill="none" stroke="#f8a41d" stroke-opacity="0.50" stroke-width="0.8"/>
+  <text x="542" y="247" fill="#c44900" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">CRON</text>
+  <text x="600" y="268" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">rollup</text>
+  <text x="600" y="284" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">nightly 02:30 UTC</text>
+
+  <rect x="760" y="232" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="760" y="232" width="160" height="64" rx="6" fill="#010101" fill-opacity="0.05" stroke="#656565" stroke-width="1"/>
+  <rect x="768" y="238" width="20" height="12" rx="2" fill="none" stroke="#656565" stroke-opacity="0.50" stroke-width="0.8"/>
+  <text x="778" y="247" fill="#656565" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">DB</text>
+  <text x="840" y="268" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">DynamoDB</text>
+  <text x="840" y="284" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">LINKDAY · USAGE rows</text>
+
+  <rect x="280" y="360" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="280" y="360" width="160" height="64" rx="6" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <rect x="288" y="366" width="24" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="300" y="375" fill="#010101" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">LOG</text>
+  <text x="360" y="396" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">api · send-worker</text>
+  <text x="360" y="412" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">one JSON line per event</text>
+
+  <rect x="520" y="360" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="520" y="360" width="160" height="64" rx="6" fill="#010101" fill-opacity="0.05" stroke="#656565" stroke-width="1"/>
+  <rect x="528" y="366" width="24" height="12" rx="2" fill="none" stroke="#656565" stroke-opacity="0.50" stroke-width="0.8"/>
+  <text x="540" y="375" fill="#656565" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">LOG</text>
+  <text x="600" y="396" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">CloudWatch Logs</text>
+  <text x="600" y="412" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">api 7 d · worker 120 d</text>
+
+  <line x1="40" y1="532" x2="920" y2="532" stroke="#010101" stroke-opacity="0.10" stroke-width="0.8"/>
+  <text x="40" y="548" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" letter-spacing="0.18em">LEGEND</text>
+  <rect x="40" y="560" width="14" height="10" rx="2" fill="#f8a41d" fill-opacity="0.10" stroke="#f8a41d" stroke-width="1"/>
+  <text x="60" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Focal</text>
+  <rect x="108" y="560" width="14" height="10" rx="2" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <text x="128" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Lambda</text>
+  <rect x="184" y="560" width="14" height="10" rx="2" fill="#010101" fill-opacity="0.05" stroke="#656565" stroke-width="1"/>
+  <text x="204" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Store</text>
+  <rect x="252" y="560" width="14" height="10" rx="2" fill="#010101" fill-opacity="0.03" stroke="#010101" stroke-opacity="0.30" stroke-width="1"/>
+  <text x="272" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">External</text>
+  <rect x="336" y="560" width="14" height="10" rx="2" fill="#656565" fill-opacity="0.10" stroke="#6e6e6e" stroke-width="1"/>
+  <text x="356" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Client</text>
+  <line x1="412" y1="565" x2="440" y2="565" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+  <text x="448" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">API call</text>
+  <line x1="512" y1="565" x2="540" y2="565" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <text x="548" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Hand-off</text>
+  <line x1="612" y1="565" x2="640" y2="565" stroke="#f8a41d" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+  <text x="648" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Primary write</text>
+  <line x1="736" y1="565" x2="764" y2="565" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <text x="772" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Async event</text>
+</svg>

@@ -1,0 +1,22 @@
+.header {
+  composes: header from "@/components/Panel/Panel.module.css";
+  border-bottom: var(--border-width-hairline) solid var(--border);
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.name {
+  composes: title from "@/components/Section/Section.module.css";
+  overflow-wrap: anywhere;
+}
+
+.number {
+  composes: helper from "@/components/Input/Input.module.css";
+}

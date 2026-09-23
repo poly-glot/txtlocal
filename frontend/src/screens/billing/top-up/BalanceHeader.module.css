@@ -1,0 +1,24 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.headline {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.balance {
+  composes: title from "@/components/Panel/Panel.module.css";
+}
+
+.note {
+  composes: helper from "@/components/Input/Input.module.css";
+}
+
+.error {
+  composes: error from "@/components/StatusMessage/StatusMessage.module.css";
+}

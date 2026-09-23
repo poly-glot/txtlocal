@@ -1,0 +1,75 @@
+.menu {
+  margin-left: var(--space-1);
+  position: relative;
+}
+
+.avatar {
+  align-items: center;
+  background: var(--accent);
+  border-radius: var(--radius-full);
+  color: var(--on-accent);
+  cursor: pointer;
+  display: flex;
+  font: var(--type-button-label);
+  height: 36px;
+  justify-content: center;
+  letter-spacing: var(--tracking-button-label);
+  list-style: none;
+  position: relative;
+  width: 36px;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.presence {
+  background: var(--success-ink);
+  border: calc(var(--border-width-hairline) * 2) solid var(--surface);
+  border-radius: var(--radius-full);
+  bottom: -2px;
+  height: 10px;
+  position: absolute;
+  right: -2px;
+  width: 10px;
+}
+
+.items {
+  composes: card from "@/components/Card/Card.module.css";
+  box-shadow: var(--shadow);
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  min-width: 220px;
+  padding: var(--space-2) 0;
+  position: absolute;
+  right: 0;
+  z-index: 20;
+}
+
+.userId {
+  color: var(--ink-muted);
+  font: var(--type-body-sm);
+  padding: var(--space-2) var(--space-4);
+}
+
+.entry {
+  margin: 0;
+}
+
+.item {
+  background: none;
+  border: 0;
+  color: var(--ink);
+  cursor: pointer;
+  display: block;
+  font: var(--type-body);
+  padding: var(--space-2) var(--space-4);
+  text-align: left;
+  text-decoration: none;
+  width: 100%;
+
+  &:hover {
+    background: var(--surface-sunken);
+    color: var(--ink);
+  }
+}

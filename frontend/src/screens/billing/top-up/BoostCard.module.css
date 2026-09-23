@@ -1,0 +1,55 @@
+.tile {
+  composes: card from "@/components/Card/Card.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.head {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+
+.amount {
+  font: var(--type-heading-md);
+}
+
+.add {
+  --disc-size: 32px;
+
+  align-items: center;
+  background: var(--brand);
+  border: 0;
+  border-radius: var(--radius-full);
+  color: var(--on-brand);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: var(--disc-size);
+  justify-content: center;
+  position: relative;
+  width: var(--disc-size);
+
+  &::before {
+    content: "";
+    inset: calc((var(--disc-size) - var(--control-height)) / 2);
+    position: absolute;
+  }
+
+  &:disabled {
+    background: var(--surface-sunken);
+    color: var(--ink-muted);
+    cursor: not-allowed;
+  }
+
+  &:hover:enabled {
+    background: var(--brand-hover);
+  }
+}
+
+.estimate {
+  composes: helper from "@/components/Input/Input.module.css";
+}

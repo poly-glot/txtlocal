@@ -1,0 +1,68 @@
+.layout {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.steps {
+  composes: content from "@/components/Section/Section.module.css";
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step {
+  align-items: center;
+  display: flex;
+  gap: var(--space-3);
+}
+
+.number {
+  align-items: center;
+  background: var(--surface-selected);
+  border-radius: var(--radius-full);
+  color: var(--brand);
+  display: flex;
+  flex-shrink: 0;
+  font: var(--type-body-strong);
+  height: var(--space-8);
+  justify-content: center;
+  width: var(--space-8);
+}
+
+.text {
+  font: var(--type-body);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.illustration {
+  --phone-height: auto;
+  background: var(--surface-sunken);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+}
+
+.envelope {
+  composes: card from "@/components/Card/Card.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+}
+
+.field {
+  composes: helper from "@/components/Input/Input.module.css";
+  overflow-wrap: anywhere;
+}
+
+.value {
+  color: var(--ink);
+}

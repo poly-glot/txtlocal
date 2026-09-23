@@ -1,0 +1,5 @@
+.recipients {
+  align-items: center;
+  display: inline-flex;
+  white-space: nowrap;
+}

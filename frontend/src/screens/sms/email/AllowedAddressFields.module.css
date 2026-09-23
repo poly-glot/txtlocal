@@ -1,0 +1,7 @@
+.grid {
+  composes: grid from "@/components/FormModal/FormModal.module.css";
+}
+
+.wide {
+  grid-column: 1 / -1;
+}

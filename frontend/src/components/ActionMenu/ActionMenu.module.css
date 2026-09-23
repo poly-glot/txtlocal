@@ -1,0 +1,39 @@
+.menu {
+  position: relative;
+}
+
+.items {
+  composes: card from "@/components/Card/Card.module.css";
+  box-shadow: var(--shadow);
+  inset-block-start: 100%;
+  inset-inline-end: 0;
+  list-style: none;
+  margin: var(--space-1) 0 0;
+  max-block-size: 240px;
+  min-inline-size: 200px;
+  overflow-y: auto;
+  padding: var(--space-1);
+  position: absolute;
+  z-index: 2;
+
+  &[data-align="start"] {
+    inset-inline-end: auto;
+    inset-inline-start: 0;
+  }
+}
+
+.pick {
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  min-block-size: var(--control-height);
+  padding: 0 var(--space-3);
+  text-align: start;
+  white-space: nowrap;
+  width: 100%;
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
+}

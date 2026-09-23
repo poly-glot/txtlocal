@@ -1,0 +1,36 @@
+.card {
+  composes: card from "@/components/Card/Card.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+}
+
+.route {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.path {
+  font: var(--type-body-strong);
+  font-family: monospace;
+  overflow-wrap: anywhere;
+}
+
+.summary {
+  composes: secondary from "@/components/Text/Text.module.css";
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sectionTitle {
+  font: var(--type-heading-sm);
+  margin: 0;
+}

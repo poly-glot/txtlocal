@@ -1,0 +1,10 @@
+.body {
+  composes: content from "@/components/Section/Section.module.css";
+}
+
+.notice {
+  composes: note from "@/components/Text/Text.module.css";
+  background: var(--surface-sunken);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}

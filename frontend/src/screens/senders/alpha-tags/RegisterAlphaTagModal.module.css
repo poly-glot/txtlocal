@@ -1,0 +1,7 @@
+.copy {
+  composes: muted from "@/components/Text/Text.module.css";
+}
+
+.support {
+  composes: helper from "@/components/Input/Input.module.css";
+}

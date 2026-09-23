@@ -1,0 +1,3 @@
+.body {
+  composes: content from "@/components/Section/Section.module.css";
+}

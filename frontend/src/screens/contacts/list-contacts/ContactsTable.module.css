@@ -1,0 +1,19 @@
+.scroll {
+  composes: scroll from "@/components/Table/Table.module.css";
+}
+
+.table {
+  composes: table from "@/components/Table/Table.module.css";
+}
+
+.header {
+  composes: header from "@/components/Table/Table.module.css";
+}
+
+.sort {
+  composes: sortButton from "@/components/Table/Table.module.css";
+}
+
+.empty {
+  composes: empty from "@/components/Table/Table.module.css";
+}

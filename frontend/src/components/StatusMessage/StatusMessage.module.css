@@ -1,0 +1,9 @@
+.status {
+  composes: muted from "@/components/Text/Text.module.css";
+}
+
+.error {
+  color: var(--danger-ink);
+  font: var(--type-body-strong);
+  margin: 0;
+}

@@ -1,0 +1,18 @@
+.tab {
+  composes: content from "@/components/Section/Section.module.css";
+}
+
+.copy {
+  composes: lead from "@/components/Text/Text.module.css";
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  margin: 0;
+}
+
+.learn {
+  color: var(--ink-muted);
+}

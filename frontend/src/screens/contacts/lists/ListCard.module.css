@@ -1,0 +1,50 @@
+.row {
+  align-items: center;
+  border-radius: var(--radius-md);
+  display: flex;
+  gap: var(--space-2);
+  padding-inline: var(--space-3) 0;
+
+  &:has([aria-current="true"]) {
+    background: var(--surface-selected);
+  }
+
+  &:hover:not(:has([aria-current="true"])) {
+    background: var(--surface-sunken);
+  }
+}
+
+.open {
+  background: none;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-height: var(--control-height);
+  min-width: 0;
+  padding: var(--space-2) 0;
+  text-align: start;
+
+  &[aria-current="true"] .name {
+    color: var(--brand);
+  }
+}
+
+.heading {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.name {
+  font: var(--type-body-strong);
+  overflow-wrap: anywhere;
+}
+
+.count {
+  composes: helper from "@/components/Input/Input.module.css";
+}

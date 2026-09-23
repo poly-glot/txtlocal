@@ -1,0 +1,35 @@
+.links {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.inertLink {
+  color: var(--ink-muted);
+  font: var(--type-link);
+}
+
+.activity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.sectionTitle {
+  composes: title from "@/components/Section/Section.module.css";
+}
+
+.note {
+  composes: helper from "@/components/Input/Input.module.css";
+}
+
+.empty {
+  composes: empty from "@/components/Table/Table.module.css";
+}

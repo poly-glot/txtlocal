@@ -1,0 +1,3 @@
+.footer {
+  composes: header from "@/components/Panel/Panel.module.css";
+}

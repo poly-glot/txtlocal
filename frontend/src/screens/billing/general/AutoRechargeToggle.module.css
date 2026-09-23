@@ -1,0 +1,55 @@
+.row {
+  align-items: start;
+  display: flex;
+  gap: var(--space-4);
+  justify-content: space-between;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.label {
+  cursor: pointer;
+  font: var(--type-heading-sm);
+}
+
+.helper {
+  composes: note from "@/components/Text/Text.module.css";
+  max-inline-size: 60ch;
+}
+
+.switch {
+  appearance: none;
+  background: var(--border-input);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  flex: none;
+  height: var(--space-6);
+  margin: 0;
+  position: relative;
+  transition: background 120ms ease;
+  width: var(--space-10);
+
+  &::before {
+    background: var(--surface);
+    border-radius: var(--radius-full);
+    content: "";
+    height: var(--space-5);
+    inset-block-start: calc((var(--space-6) - var(--space-5)) / 2);
+    inset-inline-start: calc((var(--space-6) - var(--space-5)) / 2);
+    position: absolute;
+    transition: translate 120ms ease;
+    width: var(--space-5);
+  }
+
+  &:checked {
+    background: var(--brand);
+
+    &::before {
+      translate: var(--space-4) 0;
+    }
+  }
+}

@@ -1,0 +1,113 @@
+[project]
+name = "txtlocal"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = [
+    "aioboto3",
+    "fastapi",
+    "httpx",
+    "mangum",
+    "phonenumbers",
+    "pydantic>=2.11",
+    "PyJWT[crypto]",
+]
+
+[dependency-groups]
+dev = [
+    "import-linter",
+    "mypy",
+    "pytest",
+    "pytest-asyncio",
+    "ruff",
+    "types-aioboto3[athena,dynamodb,logs,pinpoint-sms-voice-v2,sns,sqs]",
+    "uvicorn>=0.53.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/txtlocal"]
+
+[tool.ruff]
+extend-exclude = ["examples", "*.md"]
+line-length = 100
+src = ["src"]
+target-version = "py314"
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["COM812", "CPY", "D", "EM101", "EM102", "ISC001", "N818", "TC003", "TRY003"]
+
+[tool.ruff.lint.per-file-ignores]
+"qa/*" = ["FBT001", "INP001", "PLR2004", "S101"]
+"scripts/*" = ["INP001"]
+"src/txtlocal/entrypoints/billing_charge.py" = ["E402"]
+"src/txtlocal/entrypoints/delivery_events.py" = ["E402"]
+"src/txtlocal/entrypoints/inbound.py" = ["E402"]
+"src/txtlocal/entrypoints/send_worker.py" = ["E402"]
+"src/txtlocal/entrypoints/stripe_webhook.py" = ["E402"]
+"src/txtlocal/entrypoints/webhook_dispatch.py" = ["E402"]
+"**/tests/**" = ["FBT001", "PLR2004", "S101", "S105", "S106", "S311"]
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = ["pydantic.BaseModel", "txtlocal.shared.model.Model"]
+runtime-evaluated-decorators = [
+    "fastapi.APIRouter.delete",
+    "fastapi.APIRouter.get",
+    "fastapi.APIRouter.patch",
+    "fastapi.APIRouter.post",
+    "fastapi.APIRouter.put",
+]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"asyncio.run".msg = "Use txtlocal.shared.runtime.run: one loop per process"
+"boto3".msg = "Use aioboto3 through entrypoints.wiring"
+
+[tool.ruff.lint.isort]
+known-first-party = ["txtlocal"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 8
+
+[tool.ruff.lint.pylint]
+max-args = 6
+
+[tool.mypy]
+disallow_any_generics = true
+explicit_package_bases = true
+mypy_path = "src"
+plugins = ["pydantic.mypy"]
+python_version = "3.14"
+strict = true
+warn_unreachable = true
+
+[tool.importlinter]
+root_package = "txtlocal"
+
+[[tool.importlinter.contracts]]
+name = "Entrypoints over slices over shared"
+type = "layers"
+layers = ["txtlocal.entrypoints", "txtlocal.slices", "txtlocal.shared"]
+
+[[tool.importlinter.contracts]]
+name = "Slices reach each other only through service and model"
+type = "independence"
+modules = ["txtlocal.slices.*"]
+unmatched_ignore_imports_alerting = "warn"
+ignore_imports = [
+    "txtlocal.slices.** -> txtlocal.slices.*.model",
+    "txtlocal.slices.** -> txtlocal.slices.*.service",
+    "txtlocal.slices.** -> txtlocal.slices.messaging.gateway",
+    "txtlocal.slices.** -> txtlocal.slices.messaging.policy",
+    "txtlocal.slices.** -> txtlocal.slices.messaging.segments",
+]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+asyncio_mode = "auto"
+testpaths = ["src"]

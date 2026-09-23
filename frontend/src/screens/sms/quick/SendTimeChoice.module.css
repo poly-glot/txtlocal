@@ -1,0 +1,37 @@
+.fieldset {
+  align-items: center;
+  border: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  margin: 0;
+  padding: 0;
+}
+
+.legend {
+  composes: label from "@/components/Input/Input.module.css";
+  margin-block-end: var(--space-2);
+  padding: 0;
+}
+
+.option {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  min-block-size: var(--control-height);
+}
+
+.picker {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.label {
+  font: var(--type-body-strong);
+}
+
+.input {
+  composes: input from "@/components/Input/Input.module.css";
+}

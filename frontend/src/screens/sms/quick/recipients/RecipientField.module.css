@@ -1,0 +1,59 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  position: relative;
+}
+
+.label {
+  composes: label from "@/components/Input/Input.module.css";
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.chip {
+  align-items: center;
+  background: var(--surface-selected);
+  border-radius: var(--radius-full);
+  color: var(--brand);
+  display: inline-flex;
+  font: var(--type-body-sm);
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-3);
+
+  &[data-kind="LIST"] {
+    background: var(--success-surface);
+    color: var(--success-ink);
+  }
+}
+
+.remove {
+  background: transparent;
+  block-size: var(--space-6);
+  border: 0;
+  border-radius: var(--radius-full);
+  color: inherit;
+  cursor: pointer;
+  font: var(--type-body-strong);
+  inline-size: var(--space-6);
+  padding: 0;
+
+  &:hover {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+  }
+}
+
+.input {
+  composes: input from "@/components/Input/Input.module.css";
+}

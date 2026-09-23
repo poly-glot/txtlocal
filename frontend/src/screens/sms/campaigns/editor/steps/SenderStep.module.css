@@ -1,0 +1,15 @@
+.field {
+  composes: field from "@/components/Select/Select.module.css";
+}
+
+.label {
+  composes: label from "@/components/Select/Select.module.css";
+}
+
+.select {
+  composes: select from "@/components/Select/Select.module.css";
+}
+
+.link {
+  font: var(--type-link);
+}

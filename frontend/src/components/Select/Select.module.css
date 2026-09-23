@@ -1,0 +1,20 @@
+.field {
+  composes: field from "@/components/Input/Input.module.css";
+}
+
+.hiddenLabel {
+  composes: hiddenLabel from "@/components/Input/Input.module.css";
+}
+
+.label {
+  composes: label from "@/components/Input/Input.module.css";
+}
+
+.select {
+  composes: input from "@/components/Input/Input.module.css";
+  cursor: pointer;
+}
+
+.helper {
+  composes: helper from "@/components/Input/Input.module.css";
+}

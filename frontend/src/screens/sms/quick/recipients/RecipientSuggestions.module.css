@@ -1,0 +1,40 @@
+.suggestions {
+  composes: card from "@/components/Card/Card.module.css";
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.suggestion {
+  border-block-end: var(--border-width-hairline) solid var(--border);
+
+  &:last-child {
+    border-block-end: 0;
+  }
+}
+
+.pick {
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  min-block-size: var(--control-height);
+  padding: var(--space-2) var(--space-3);
+  text-align: start;
+  width: 100%;
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
+}
+
+.name {
+  font: var(--type-body-strong);
+}

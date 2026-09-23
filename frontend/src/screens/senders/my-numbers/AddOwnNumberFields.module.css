@@ -1,0 +1,11 @@
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.number {
+  align-items: start;
+  display: flex;
+  gap: var(--space-3);
+}

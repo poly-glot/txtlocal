@@ -1,0 +1,7 @@
+.row {
+  composes: header from "@/components/Panel/Panel.module.css";
+}
+
+.body {
+  margin: 0;
+}

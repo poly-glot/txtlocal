@@ -1,0 +1,37 @@
+.header {
+  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.name {
+  display: flex;
+  flex: 1 1 240px;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-inline-size: 420px;
+}
+
+.label {
+  composes: hiddenLabel from "@/components/Input/Input.module.css";
+}
+
+.input {
+  composes: input from "@/components/Input/Input.module.css";
+  font: var(--type-heading-md);
+}
+
+.edit {
+  align-self: start;
+  background: transparent;
+  border: 0;
+  color: var(--brand);
+  cursor: pointer;
+  font: var(--type-link);
+  padding: 0;
+
+  &:hover {
+    color: var(--brand-hover);
+  }
+}

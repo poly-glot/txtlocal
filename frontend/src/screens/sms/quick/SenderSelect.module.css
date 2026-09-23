@@ -1,0 +1,29 @@
+.field {
+  composes: field from "@/components/Input/Input.module.css";
+}
+
+.label {
+  composes: label from "@/components/Input/Input.module.css";
+}
+
+.select {
+  composes: select from "@/components/Select/Select.module.css";
+}
+
+.helper {
+  composes: helper from "@/components/Input/Input.module.css";
+}
+
+.links {
+  display: flex;
+  gap: var(--space-3);
+  margin: 0;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.link {
+  font: var(--type-body-sm);
+}

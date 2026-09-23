@@ -1,0 +1,30 @@
+.pane {
+  composes: content from "@/components/Section/Section.module.css";
+  min-height: 480px;
+}
+
+.empty {
+  composes: empty from "@/components/Table/Table.module.css";
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+.illustration {
+  height: 64px;
+  width: 64px;
+}
+
+.emptyText {
+  font: var(--type-body);
+  margin: 0;
+}
+
+.header {
+  border-bottom: var(--border-width-hairline) solid var(--border);
+  font: var(--type-heading-sm);
+  padding-bottom: var(--space-4);
+}

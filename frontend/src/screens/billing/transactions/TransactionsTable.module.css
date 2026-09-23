@@ -1,0 +1,19 @@
+.invoice {
+  align-items: center;
+  color: var(--ink);
+  display: inline-flex;
+  font: var(--type-body);
+  gap: var(--space-1);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--brand);
+    text-decoration: underline;
+  }
+}
+
+.amount {
+  color: var(--success-ink);
+  font: var(--type-body-strong);
+  white-space: nowrap;
+}

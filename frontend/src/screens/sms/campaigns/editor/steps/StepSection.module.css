@@ -1,0 +1,50 @@
+.step {
+  composes: section from "@/components/Section/Section.module.css";
+}
+
+.intro {
+  align-items: start;
+  display: flex;
+  gap: var(--space-3);
+}
+
+.mark {
+  align-items: center;
+  background: var(--surface-sunken);
+  block-size: var(--space-6);
+  border-radius: var(--radius-full);
+  color: var(--ink-secondary);
+  display: inline-flex;
+  flex-shrink: 0;
+  font: var(--type-caption-caps);
+  inline-size: var(--space-6);
+  justify-content: center;
+
+  &[data-complete="true"] {
+    background: var(--success-surface);
+    color: var(--success-ink);
+  }
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.title {
+  composes: title from "@/components/Section/Section.module.css";
+}
+
+.subtitle {
+  composes: note from "@/components/Text/Text.module.css";
+}
+
+.state {
+  composes: hiddenLabel from "@/components/Input/Input.module.css";
+  margin: 0;
+}
+
+.body {
+  composes: content from "@/components/Section/Section.module.css";
+}

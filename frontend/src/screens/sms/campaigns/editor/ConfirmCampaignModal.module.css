@@ -1,0 +1,3 @@
+.refusal {
+  composes: error from "@/components/StatusMessage/StatusMessage.module.css";
+}

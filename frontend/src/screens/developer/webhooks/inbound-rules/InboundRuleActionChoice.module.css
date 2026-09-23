@@ -1,0 +1,7 @@
+.prompt {
+  composes: helper from "@/components/Input/Input.module.css";
+}
+
+.grid {
+  composes: grid from "@/components/FormModal/FormModal.module.css";
+}

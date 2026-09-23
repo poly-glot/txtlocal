@@ -1,0 +1,11 @@
+.form {
+  composes: form from "@/components/SettingsForm/SettingsForm.module.css";
+}
+
+.fields {
+  composes: fields from "@/components/SettingsForm/SettingsForm.module.css";
+}
+
+.footer {
+  composes: footer from "@/components/SettingsForm/SettingsForm.module.css";
+}

@@ -1,0 +1,8 @@
+.row {
+  composes: row from "@/components/Table/Table.module.css";
+}
+
+.cell {
+  composes: cell from "@/components/Table/Table.module.css";
+  white-space: nowrap;
+}

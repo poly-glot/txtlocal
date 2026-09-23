@@ -1,0 +1,110 @@
+.sidebar {
+  --sidebar-width: 248px;
+
+  background: var(--surface);
+  border-right: var(--border-width-hairline) solid var(--border-input);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100dvh;
+  position: sticky;
+  top: 0;
+  width: var(--sidebar-width);
+
+  &[data-collapsed="true"] {
+    --sidebar-width: 64px;
+
+    & .collapse {
+      rotate: 180deg;
+    }
+  }
+
+  @media (max-width: 900px) {
+    border-bottom: var(--border-width-hairline) solid var(--border-input);
+    border-right: 0;
+    height: auto;
+    position: static;
+    width: auto;
+
+    &[data-collapsed="true"] {
+      align-items: center;
+      flex-direction: row;
+      justify-content: space-between;
+
+      & .brand {
+        border-bottom: 0;
+      }
+    }
+  }
+}
+
+.brand {
+  align-items: center;
+  border-bottom: var(--border-width-hairline) solid var(--border);
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--space-3);
+  height: 64px;
+  padding: 0 var(--space-5);
+}
+
+.tile {
+  align-items: center;
+  background: var(--brand);
+  border-radius: var(--radius-md);
+  color: var(--on-brand);
+  display: flex;
+  flex-shrink: 0;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.name {
+  font: var(--type-heading-md);
+}
+
+.nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-3);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-1) / 2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  &[data-starts-section="true"]::before {
+    background: var(--border);
+    content: "";
+    display: block;
+    height: var(--border-width-hairline);
+    margin: var(--space-3);
+  }
+}
+
+.collapse {
+  align-items: center;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-md);
+  color: var(--ink-secondary);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 40px;
+  justify-content: center;
+  margin: var(--space-3);
+  transition: rotate 120ms ease;
+  width: 40px;
+
+  &:hover {
+    background: var(--surface-sunken);
+  }
+}

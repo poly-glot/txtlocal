@@ -1,0 +1,30 @@
+.button {
+  align-items: center;
+  border: 0;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  height: var(--control-height);
+  justify-content: center;
+  width: var(--control-height);
+
+  &[data-variant="ghost"] {
+    background: transparent;
+    color: var(--ink-secondary);
+
+    &:hover {
+      background: var(--surface-sunken);
+      color: var(--ink);
+    }
+  }
+
+  &[data-variant="primary"] {
+    background: var(--brand);
+    color: var(--on-brand);
+
+    &:hover {
+      background: var(--brand-hover);
+    }
+  }
+}

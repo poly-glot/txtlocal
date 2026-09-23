@@ -1,0 +1,19 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.section {
+  composes: section from "@/components/Section/Section.module.css";
+}
+
+.title {
+  composes: title from "@/components/Section/Section.module.css";
+  cursor: pointer;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}

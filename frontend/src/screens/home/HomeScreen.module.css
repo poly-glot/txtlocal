@@ -1,0 +1,40 @@
+.page {
+  composes: stack from "@/components/Stack/Stack.module.css";
+  container: home / inline-size;
+}
+
+.columns {
+  align-items: start;
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: minmax(0, 1fr) 380px;
+
+  @container home (width < 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.composer {
+  composes: card from "@/components/Card/Card.module.css";
+  --tabs-inset: var(--space-6);
+  container: composer / inline-size;
+}
+
+.panel {
+  padding: var(--space-6);
+}
+
+.split {
+  align-items: start;
+  display: grid;
+  gap: var(--space-8);
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  @container composer (width < 640px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.rail {
+  composes: stack from "@/components/Stack/Stack.module.css";
+}

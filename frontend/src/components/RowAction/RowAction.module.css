@@ -1,0 +1,24 @@
+.action {
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--brand);
+  cursor: pointer;
+  font: var(--type-link);
+  margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2));
+  padding: var(--space-1) var(--space-2);
+  text-decoration: underline;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--brand-hover);
+  }
+
+  &[data-tone="danger"] {
+    color: var(--danger-ink);
+
+    &:hover {
+      background: var(--danger-surface);
+    }
+  }
+}

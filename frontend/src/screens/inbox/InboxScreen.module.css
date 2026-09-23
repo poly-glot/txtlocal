@@ -1,0 +1,14 @@
+.page {
+  composes: content from "@/components/Section/Section.module.css";
+}
+
+.panels {
+  align-items: start;
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+
+  @media (max-width: 900px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,33 @@
+.card {
+  composes: card from "@/components/Card/Card.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
+}
+
+.term {
+  color: var(--ink-muted);
+  font: var(--type-caption-caps);
+  letter-spacing: var(--tracking-caption-caps);
+  text-transform: uppercase;
+}
+
+.value {
+  font: var(--type-stat-number);
+  margin: 0;
+}
+
+.footer {
+  border-block-start: var(--border-width-hairline) solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  padding-block-start: var(--space-4);
+}

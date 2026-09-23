@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="messaging-title messaging-desc">
+  <title id="messaging-title">Sending, delivery and replies</title>
+  <desc id="messaging-desc">The api and the scheduler queue send jobs for send-worker, which sends through AWS End User Messaging; delivery events and replies return over SNS to delivery-events and inbound, which queue signed webhooks for the developer's endpoint.</desc>
+  <defs>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;family=Rozha+One&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap');</style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#656565"/></marker>
+    <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f8a41d"/></marker>
+    <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#010101"/></marker>
+  </defs>
+
+  <rect width="100%" height="100%" fill="#ffffff"/>
+
+  
+
+  <path d="M 200,136 H 232 Q 240,136 240,144 V 244 Q 240,252 248,252 H 280" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 200,392 H 248 Q 256,392 256,384 V 284 Q 256,276 264,276 H 280" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 440,264 H 520" fill="none" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+  <path d="M 600,232 V 144 Q 600,136 608,136 H 760" fill="none" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <path d="M 600,296 V 360" fill="none" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <path d="M 840,168 V 232" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 680,392 H 712 Q 720,392 720,384 V 272 Q 720,264 728,264 H 760" fill="none" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <path d="M 840,296 V 360" fill="none" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+  <path d="M 600,424 V 448 Q 600,456 592,456 H 368 Q 360,456 360,448 V 296" fill="none" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+  <rect x="248" y="188" width="56" height="12" rx="2" fill="#ffffff"/>
+  <text x="276" y="197" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">SEND-JOBS</text>
+  <rect x="264" y="328" width="56" height="12" rx="2" fill="#ffffff"/>
+  <text x="292" y="337" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">SEND-JOBS</text>
+  <rect x="464" y="244" width="32" height="12" rx="2" fill="#ffffff"/>
+  <text x="480" y="253" fill="#010101" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">SEND</text>
+  <rect x="648" y="116" width="64" height="12" rx="2" fill="#ffffff"/>
+  <text x="680" y="125" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">SMS-EVENTS</text>
+  <rect x="608" y="322" width="68" height="12" rx="2" fill="#ffffff"/>
+  <text x="642" y="331" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">SMS-INBOUND</text>
+  <rect x="848" y="194" width="52" height="12" rx="2" fill="#ffffff"/>
+  <text x="874" y="203" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">WEBHOOKS</text>
+  <rect x="728" y="322" width="52" height="12" rx="2" fill="#ffffff"/>
+  <text x="754" y="331" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">WEBHOOKS</text>
+  <rect x="848" y="322" width="68" height="12" rx="2" fill="#ffffff"/>
+  <text x="882" y="331" fill="#010101" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">SIGNED POST</text>
+  <rect x="448" y="436" width="64" height="12" rx="2" fill="#ffffff"/>
+  <text x="480" y="445" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.06em">AUTO-REPLY</text>
+
+  <rect x="40" y="104" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="40" y="104" width="160" height="64" rx="6" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <rect x="48" y="110" width="28" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="62" y="119" fill="#010101" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">HTTP</text>
+  <text x="120" y="140" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">api</text>
+  <text x="120" y="156" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">quick send · /api/v3</text>
+
+  <rect x="40" y="360" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="40" y="360" width="160" height="64" rx="6" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <rect x="48" y="366" width="28" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="62" y="375" fill="#010101" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">CRON</text>
+  <text x="120" y="396" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">scheduler</text>
+  <text x="120" y="412" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">every minute · campaigns</text>
+
+  <rect x="280" y="232" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="280" y="232" width="160" height="64" rx="6" fill="#f8a41d" fill-opacity="0.10" stroke="#f8a41d" stroke-width="1"/>
+  <rect x="288" y="238" width="24" height="12" rx="2" fill="none" stroke="#f8a41d" stroke-opacity="0.50" stroke-width="0.8"/>
+  <text x="300" y="247" fill="#c44900" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">SQS</text>
+  <text x="360" y="268" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">send-worker</text>
+  <text x="360" y="284" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">SendPolicy · SmsGateway</text>
+
+  <rect x="520" y="232" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="520" y="232" width="160" height="64" rx="6" fill="#010101" fill-opacity="0.03" stroke="#010101" stroke-opacity="0.30" stroke-width="1"/>
+  <rect x="528" y="238" width="24" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.22" stroke-width="0.8"/>
+  <text x="540" y="247" fill="#6e6e6e" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">SMS</text>
+  <text x="600" y="268" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">End User Messaging</text>
+  <text x="600" y="284" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">SMS v2 · handsets</text>
+
+  <rect x="520" y="360" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="520" y="360" width="160" height="64" rx="6" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <rect x="528" y="366" width="24" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="540" y="375" fill="#010101" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">SNS</text>
+  <text x="600" y="396" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">inbound</text>
+  <text x="600" y="412" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">STOP · rules · threads</text>
+
+  <rect x="760" y="104" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="760" y="104" width="160" height="64" rx="6" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <rect x="768" y="110" width="24" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="780" y="119" fill="#010101" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">SNS</text>
+  <text x="840" y="140" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">delivery-events</text>
+  <text x="840" y="156" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">settle · refund</text>
+
+  <rect x="760" y="232" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="760" y="232" width="160" height="64" rx="6" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <rect x="768" y="238" width="24" height="12" rx="2" fill="none" stroke="#010101" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="780" y="247" fill="#010101" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">SQS</text>
+  <text x="840" y="268" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">webhook-dispatch</text>
+  <text x="840" y="284" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">HMAC · retries</text>
+
+  <rect x="760" y="360" width="160" height="64" rx="6" fill="#ffffff"/>
+  <rect x="760" y="360" width="160" height="64" rx="6" fill="#656565" fill-opacity="0.10" stroke="#6e6e6e" stroke-width="1"/>
+  <rect x="768" y="366" width="24" height="12" rx="2" fill="none" stroke="#6e6e6e" stroke-opacity="0.40" stroke-width="0.8"/>
+  <text x="780" y="375" fill="#6e6e6e" font-size="7" font-weight="500" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle" letter-spacing="0.08em">DEV</text>
+  <text x="840" y="396" fill="#010101" font-size="12" font-weight="500" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif" text-anchor="middle">Developer endpoint</text>
+  <text x="840" y="412" fill="#656565" font-size="9" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" text-anchor="middle">X-Txtlocal-Signature</text>
+
+  <line x1="40" y1="532" x2="920" y2="532" stroke="#010101" stroke-opacity="0.10" stroke-width="0.8"/>
+  <text x="40" y="548" fill="#656565" font-size="8" font-family="'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace" letter-spacing="0.18em">LEGEND</text>
+  <rect x="40" y="560" width="14" height="10" rx="2" fill="#f8a41d" fill-opacity="0.10" stroke="#f8a41d" stroke-width="1"/>
+  <text x="60" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Focal</text>
+  <rect x="108" y="560" width="14" height="10" rx="2" fill="#ffffff" stroke="#010101" stroke-width="1"/>
+  <text x="128" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Lambda</text>
+  <rect x="184" y="560" width="14" height="10" rx="2" fill="#010101" fill-opacity="0.03" stroke="#010101" stroke-opacity="0.30" stroke-width="1"/>
+  <text x="204" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">External</text>
+  <rect x="268" y="560" width="14" height="10" rx="2" fill="#656565" fill-opacity="0.10" stroke="#6e6e6e" stroke-width="1"/>
+  <text x="288" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Client</text>
+  <line x1="344" y1="565" x2="372" y2="565" stroke="#010101" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+  <text x="380" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">API call</text>
+  <line x1="444" y1="565" x2="472" y2="565" stroke="#656565" stroke-width="1.2" marker-end="url(#arrow)"/>
+  <text x="480" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Hand-off</text>
+  <line x1="544" y1="565" x2="572" y2="565" stroke="#656565" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <text x="580" y="568" fill="#656565" font-size="8.5" font-family="'Roboto', 'Helvetica Neue', Arial, sans-serif">Async event</text>
+</svg>

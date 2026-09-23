@@ -1,0 +1,41 @@
+.summary {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.row {
+  align-items: baseline;
+  border-block-end: var(--border-width-hairline) solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  justify-content: space-between;
+  padding-block: var(--space-3);
+}
+
+.total {
+  composes: row;
+  border-block-end: 0;
+}
+
+.term {
+  color: var(--ink-secondary);
+  font: var(--type-body-sm);
+}
+
+.value {
+  font: var(--type-body-strong);
+  margin: 0;
+  text-align: end;
+}
+
+.note {
+  composes: helper from "@/components/Input/Input.module.css";
+  flex-basis: 100%;
+  font-style: italic;
+}
+
+.cost {
+  composes: title from "@/components/Section/Section.module.css";
+}

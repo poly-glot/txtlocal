@@ -1,0 +1,30 @@
+.tabs {
+  border-bottom: var(--border-width-hairline) solid var(--border);
+  display: flex;
+  gap: var(--space-6);
+  overflow-x: auto;
+  padding-inline: var(--tabs-inset, 0);
+}
+
+.tab {
+  background: none;
+  border: 0;
+  border-bottom: var(--border-width-focus) solid transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  font: var(--type-button-label);
+  letter-spacing: var(--tracking-button-label);
+  margin-bottom: calc(-1 * var(--border-width-hairline));
+  padding: var(--space-4) 0;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--ink);
+  }
+
+  &[aria-selected="true"] {
+    border-bottom-color: var(--brand);
+    color: var(--brand);
+  }
+}

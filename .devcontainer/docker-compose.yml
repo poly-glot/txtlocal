@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sleep infinity
+    depends_on:
+      dynamodb:
+        condition: service_healthy
+    environment:
+      AWS_ACCESS_KEY_ID: local
+      AWS_ENDPOINT_URL_DYNAMODB: http://dynamodb:8000
+      AWS_REGION: eu-west-2
+      AWS_SECRET_ACCESS_KEY: local
+      BUS: local
+      SMS_MODE: fake
+      TABLE_NAME: txtlocal-local
+      UV_LINK_MODE: copy
+      UV_PROJECT_ENVIRONMENT: /home/vscode/.venv
+    ports:
+      - "3000:3000"
+      - "9000:9000"
+    volumes:
+      - ..:/workspaces/txtlocal:cached
+      - node-modules:/workspaces/txtlocal/frontend/node_modules
+      - venv:/home/vscode/.venv
+
+  dynamodb:
+    command: -jar DynamoDBLocal.jar -sharedDb -inMemory
+    expose:
+      - "8000"
+    healthcheck:
+      interval: 5s
+      retries: 10
+      start_period: 5s
+      test: ["CMD-SHELL", "curl -sf http://localhost:8000 || [ $$? -eq 22 ]"]
+      timeout: 3s
+    image: amazon/dynamodb-local:latest
+
+volumes:
+  node-modules:
+  venv:

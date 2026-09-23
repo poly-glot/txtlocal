@@ -1,0 +1,63 @@
+.card {
+  composes: card from "@/components/Card/Card.module.css";
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  padding: var(--space-6);
+}
+
+.intro {
+  display: flex;
+  flex: 1 1 320px;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.title {
+  font: var(--type-display);
+  letter-spacing: var(--tracking-display);
+  margin: 0;
+}
+
+.subtitle {
+  composes: secondary from "@/components/Text/Text.module.css";
+}
+
+.video {
+  align-items: center;
+  background: var(--surface-sunken);
+  border: var(--border-width-hairline) solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+}
+
+.disc {
+  align-items: center;
+  background: var(--brand);
+  block-size: 36px;
+  border-radius: var(--radius-full);
+  color: var(--on-brand);
+  display: flex;
+  flex-shrink: 0;
+  inline-size: 36px;
+  justify-content: center;
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+}
+
+.videoTitle {
+  color: var(--brand);
+  font: var(--type-body-strong);
+}
+
+.videoLength {
+  color: var(--ink-muted);
+  font: var(--type-body-sm);
+}

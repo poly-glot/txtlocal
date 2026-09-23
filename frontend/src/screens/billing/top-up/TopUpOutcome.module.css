@@ -1,0 +1,5 @@
+.outcome {
+  composes: toast from "@/components/Toast/Toast.module.css";
+  display: block;
+  margin: 0;
+}

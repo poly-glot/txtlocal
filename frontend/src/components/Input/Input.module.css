@@ -1,0 +1,41 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.hiddenLabel {
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.label {
+  font: var(--type-heading-sm);
+}
+
+.input {
+  background: var(--surface);
+  border: var(--border-width-hairline) solid var(--border-input);
+  border-radius: var(--radius-md);
+  color: var(--ink);
+  font: var(--type-body);
+  min-height: var(--control-height);
+  padding: 0 var(--space-3);
+
+  &:disabled,
+  &[readonly] {
+    background: var(--surface-sunken);
+    border-color: transparent;
+    color: var(--ink-muted);
+  }
+}
+
+.helper {
+  color: var(--ink-muted);
+  font: var(--type-body-sm);
+  margin: 0;
+}

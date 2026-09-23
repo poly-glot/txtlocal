@@ -1,0 +1,22 @@
+.cell {
+  align-items: center;
+  display: flex;
+  min-height: var(--control-height);
+  white-space: nowrap;
+}
+
+.card {
+  composes: cell;
+  gap: var(--space-2);
+}
+
+.number {
+  font: var(--type-body-strong);
+  text-transform: capitalize;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+}

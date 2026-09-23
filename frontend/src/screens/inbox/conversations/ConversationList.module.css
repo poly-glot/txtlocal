@@ -1,0 +1,30 @@
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  list-style: none;
+  margin: 0;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.empty {
+  composes: empty from "@/components/Table/Table.module.css";
+}
+
+.startNew {
+  background: var(--surface-selected);
+  border: var(--border-width-hairline) dashed var(--brand);
+  border-radius: var(--radius-md);
+  color: var(--brand);
+  cursor: pointer;
+  font: var(--type-body-strong);
+  min-height: var(--control-height);
+  padding: var(--space-3);
+  text-align: start;
+
+  &:hover {
+    border-style: solid;
+  }
+}

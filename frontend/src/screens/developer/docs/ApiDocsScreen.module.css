@@ -1,0 +1,9 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.groupTitle {
+  composes: title from "@/components/Section/Section.module.css";
+}

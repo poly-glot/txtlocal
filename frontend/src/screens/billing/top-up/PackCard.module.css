@@ -1,0 +1,46 @@
+.tile {
+  composes: card from "@/components/Card/Card.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+}
+
+.head {
+  align-items: flex-start;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space-1) / 2);
+}
+
+.name {
+  font: var(--type-heading-sm);
+  margin: 0;
+}
+
+.rate {
+  composes: helper from "@/components/Input/Input.module.css";
+}
+
+.price {
+  composes: title from "@/components/Section/Section.module.css";
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.credit {
+  color: var(--ink-secondary);
+  font: var(--type-body-sm);
+}
+
+.estimate {
+  composes: helper from "@/components/Input/Input.module.css";
+}

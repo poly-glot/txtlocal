@@ -1,0 +1,10 @@
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.note {
+  composes: helper from "@/components/Input/Input.module.css";
+}

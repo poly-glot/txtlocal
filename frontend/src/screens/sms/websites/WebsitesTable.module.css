@@ -1,0 +1,4 @@
+.reason {
+  composes: helper from "@/components/Input/Input.module.css";
+  margin: var(--space-1) 0 0;
+}
