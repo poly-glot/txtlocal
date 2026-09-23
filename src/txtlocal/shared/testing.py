@@ -23,7 +23,10 @@ async def local_repo_table(prefix: str) -> AsyncIterator[Table]:
         pytest.skip(SKIP_NOTICE)
 
     name = f"{prefix}-run_{secrets.token_hex(6)}"
-    async with aioboto3.Session().client("dynamodb", endpoint_url=endpoint) as client:
+    region = os.environ.get("AWS_REGION")
+    async with aioboto3.Session().client(
+        "dynamodb", endpoint_url=endpoint, region_name=region
+    ) as client:
         await client.create_table(
             AttributeDefinitions=[
                 {"AttributeName": "PK", "AttributeType": "S"},

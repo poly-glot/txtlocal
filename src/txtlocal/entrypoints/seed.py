@@ -118,7 +118,8 @@ async def seed_platform(table: Table) -> int:
 async def main() -> int:
     session = aioboto3.Session()
     endpoint = os.environ.get("AWS_ENDPOINT_URL_DYNAMODB")
-    async with session.client("dynamodb", endpoint_url=endpoint) as client:
+    region = os.environ.get("AWS_REGION")
+    async with session.client("dynamodb", endpoint_url=endpoint, region_name=region) as client:
         table = Table(client=client, name=os.environ["TABLE_NAME"])
         count = await seed_platform(table)
     telemetry.log("seeded", items=count, table=table.name)
