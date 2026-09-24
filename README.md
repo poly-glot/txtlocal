@@ -93,6 +93,19 @@ Locally `.env.example` becomes `.env`; `scripts/dev.sh` sources it and forces `S
 `BUS=local`, so nothing on a laptop can reach AWS. Payments go to a Stripe sandbox even there;
 `docs/runbook.md` section 4 has the two values `.env` needs and the `stripe listen` line.
 
+`.env` is gitignored; the committed `.env.enc` is that file with its values encrypted by SOPS for the
+age recipient in `.sops.yaml`. The matching private key is the `sops-key` secret in the
+`firebase-cloud-491613` Google Cloud project, the one age key every project that encrypts this way
+shares, so a fresh machine recovers `.env` with:
+
+```bash
+export SOPS_AGE_KEY="$(gcloud secrets versions access latest --secret sops-key --project firebase-cloud-491613)"
+sops --decrypt --input-type dotenv --output-type dotenv .env.enc > .env
+```
+
+After changing `.env`, `sops --encrypt --input-type dotenv --output-type dotenv .env > .env.enc`
+writes the file to commit.
+
 Three things are set after the first apply, because they exist only once the resources do: the
 Cognito client id and issuer into the function environment through `aws-cloud`, the Stripe webhook
 signing secret once the endpoint is registered against the `stripe-webhook` URL, and the SMS
