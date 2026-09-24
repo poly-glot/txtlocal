@@ -1,9 +1,29 @@
-from dataclasses import dataclass, field
+import json
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
-from uuid import UUID
+from uuid import UUID, uuid7
 
+from txtlocal.shared.errors import BadRequest, NotFound
 from txtlocal.shared.money import Micro
+from txtlocal.shared.testing import RecordingBus
+from txtlocal.slices.billing.gateway import (
+    INVALID_SIGNATURE,
+    NO_DEFAULT_CARD,
+    Card,
+    ChargeOutcome,
+    ChargeStatus,
+    CheckoutSession,
+    Invoice,
+    OffSessionCharge,
+    Pack,
+    PaymentEvent,
+    PaymentGateway,
+    ReturnUrls,
+    as_mapping,
+    payment_event_of,
+    signature_fields,
+)
 from txtlocal.slices.billing.model import (
     BillingAccount,
     LedgerEntry,
@@ -19,7 +39,7 @@ from txtlocal.slices.billing.repo import (
     ledger_sort_key,
     rental_event_id,
 )
-from txtlocal.slices.billing.service import AccountContacts, BillingService, Email
+from txtlocal.slices.billing.service import CARD_NOT_FOUND, AccountContacts, BillingService, Email
 
 if TYPE_CHECKING:
     from txtlocal.slices.messaging.model import Product
@@ -94,9 +114,11 @@ class InMemoryBillingRepo:
         )
         return True
 
-    async def save_stripe_customer_id(self, account_id: str, customer_id: str) -> bool:
+    async def save_stripe_customer_id(
+        self, account_id: str, customer_id: str, replacing: str | None
+    ) -> bool:
         account = self.accounts.get(account_id)
-        if account is None or account.stripe_customer_id is not None:
+        if account is None or account.stripe_customer_id != replacing:
             return False
         self.accounts[account_id] = account.model_copy(update={"stripe_customer_id": customer_id})
         return True
@@ -272,7 +294,7 @@ def ledger_of(repo: InMemoryBillingRepo) -> list[LedgerEntry]:
 
 
 def billing(repo: InMemoryBillingRepo, now: datetime = NOW) -> BillingService:
-    return BillingService(clock=lambda: now, repo=repo)
+    return BillingService(bus=RecordingBus(), clock=lambda: now, public_base_url="", repo=repo)
 
 
 @dataclass(frozen=True, slots=True)
@@ -316,4 +338,104 @@ class RecordingEmail:
 
 
 def _fits_email(fake: RecordingEmail) -> Email:
+    return fake
+
+
+CHECKOUT_URL = "https://checkout.stripe.com/c/pay/"
+INVOICE_URL = "https://invoice.stripe.com/i/"
+SEED_VISA = Card(
+    brand="visa",
+    cardholder_name="Demo Card",
+    exp_month=12,
+    exp_year=2035,
+    last4="4242",
+    payment_method_id="pm_demo_4242",
+)
+SEED_DECLINING = replace(SEED_VISA, last4="0002", payment_method_id="pm_demo_0002")
+
+
+@dataclass(slots=True)
+class StoredCustomer:
+    cards: dict[str, Card] = field(default_factory=dict)
+    default: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class FakePaymentGateway:
+    customers: dict[str, StoredCustomer] = field(default_factory=dict)
+
+    async def ensure_customer(self, _account_id: str, _email: str) -> str:
+        customer_id = f"cus_demo_{uuid7()}"
+        self.customers[customer_id] = StoredCustomer(
+            cards={
+                SEED_VISA.payment_method_id: SEED_VISA,
+                SEED_DECLINING.payment_method_id: SEED_DECLINING,
+            },
+            default=SEED_VISA.payment_method_id,
+        )
+        return customer_id
+
+    async def customer_exists(self, customer_id: str) -> bool:
+        return customer_id in self.customers
+
+    async def checkout(
+        self, _customer_id: str, _pack: Pack, _urls: ReturnUrls, _idempotency_key: str
+    ) -> CheckoutSession:
+        return self._session()
+
+    async def setup_session(self, _customer_id: str, _urls: ReturnUrls) -> CheckoutSession:
+        return self._session()
+
+    async def payment_methods(self, customer_id: str) -> list[Card]:
+        stored = self.customers.get(customer_id)
+        if stored is None:
+            return []
+        return [
+            replace(card, is_default=pm_id == stored.default)
+            for pm_id, card in stored.cards.items()
+        ]
+
+    async def set_default(self, customer_id: str, payment_method_id: str) -> None:
+        stored = self.customers.get(customer_id)
+        if stored is None or payment_method_id not in stored.cards:
+            raise NotFound(CARD_NOT_FOUND)
+        stored.default = payment_method_id
+
+    async def detach(self, payment_method_id: str) -> None:
+        for stored in self.customers.values():
+            if payment_method_id in stored.cards:
+                del stored.cards[payment_method_id]
+                if stored.default == payment_method_id:
+                    stored.default = None
+                return
+        raise NotFound(CARD_NOT_FOUND)
+
+    async def charge_off_session(self, charge: OffSessionCharge) -> ChargeOutcome:
+        stored = self.customers.get(charge.customer_id)
+        default_id = stored.default if stored is not None else None
+        if default_id is None:
+            return ChargeOutcome(status=ChargeStatus.DECLINED, decline_code=NO_DEFAULT_CARD)
+        if default_id == SEED_DECLINING.payment_method_id:
+            return ChargeOutcome(status=ChargeStatus.DECLINED, decline_code="card_declined")
+        return ChargeOutcome(
+            status=ChargeStatus.SUCCEEDED, provider_ref=f"pi_demo_{charge.idempotency_key}"
+        )
+
+    async def invoice(self, invoice_id: str) -> Invoice:
+        return Invoice(
+            number=f"INV-{invoice_id.removeprefix('in_')}", url=f"{INVOICE_URL}{invoice_id}"
+        )
+
+    def verify_webhook(self, payload: bytes, signature: str, _now: datetime) -> PaymentEvent:
+        values = [value for name, value in signature_fields(signature) if name == "v1"]
+        if values != ["fake"]:
+            raise BadRequest(INVALID_SIGNATURE)
+        return payment_event_of(as_mapping(json.loads(payload)))
+
+    def _session(self) -> CheckoutSession:
+        session_id = f"cs_demo_{uuid7()}"
+        return CheckoutSession(session_id=session_id, url=f"{CHECKOUT_URL}{session_id}")
+
+
+def _fits_gateway(fake: FakePaymentGateway) -> PaymentGateway:
     return fake

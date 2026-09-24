@@ -168,7 +168,9 @@ adapters, the gateway, the bus, the clock and the repositories, are constructed 
 which is what CloudFront does in production. The fake gateway answers every send with a synthetic
 provider id and a delivery event chosen by the destination's last two digits, so History shows
 delivered, failed and unreachable rows without a network. `POST /api/app/demo/inbound` injects an
-inbound message and exists only when `SMS_MODE=fake`. Nothing here can reach AWS.
+inbound message and exists only when `SMS_MODE=fake`. Nothing here can reach AWS. Top-ups and
+cards go to a Stripe sandbox, whose webhooks `scripts/dev.sh` forwards through `stripe listen`;
+`docs/runbook.md` section 4 has the `.env` value it needs.
 
 ## 5. Cost
 

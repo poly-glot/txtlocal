@@ -58,8 +58,9 @@ These rules bind exactly as `CLAUDE.md` does. Read them before writing or changi
 - No mocks of the module under test, no `unittest.mock.patch` on a collaborator that has a reference
   implementation, no assertion on how many times something was called. Assert the state that resulted.
 - No sleeping. A test that waits for time to pass passes a later clock.
-- No network. A test that needs AWS opens with `local_repo_table`; a test that needs Stripe uses the
-  scripted gateway.
+- No network. A test that needs AWS opens with `local_repo_table`; a test that needs Stripe uses
+  `FakePaymentGateway` from `billing/tests/fakes.py`, or `StripeGateway` over an
+  `httpx.MockTransport` when the request Stripe receives is the point.
 - No `# noqa`, `# type: ignore` or `pragma`. Tests obey `ruff` and `mypy --strict` like everything
   else; `tests/` may use `assert`, hard-coded numbers and hard-coded secrets, and nothing else extra.
 

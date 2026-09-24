@@ -1,0 +1,101 @@
+.body {
+  color: var(--ink-secondary);
+  margin: 0;
+}
+
+.eyebrow {
+  composes: eyebrow from "./LandingScreen.module.css";
+}
+
+.inner {
+  composes: inner from "./LandingScreen.module.css";
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--space-8) * 2);
+}
+
+.intro {
+  display: flex;
+  flex: 1 1 320px;
+  flex-direction: column;
+  gap: var(--space-3);
+  position: sticky;
+  top: 108px;
+
+  @media (width < 800px) {
+    position: static;
+  }
+}
+
+.lead {
+  composes: lead from "./LandingScreen.module.css";
+}
+
+.list {
+  display: flex;
+  flex: 1 1 520px;
+  flex-direction: column;
+  gap: var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.name {
+  font: var(--type-heading-md);
+  margin: 0;
+}
+
+.number {
+  align-items: center;
+  background: linear-gradient(135deg, var(--brand), var(--accent));
+  border-radius: var(--radius-md);
+  color: var(--on-brand);
+  display: flex;
+  flex-shrink: 0;
+  font: var(--type-heading-md);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  height: 48px;
+  justify-content: center;
+  width: 48px;
+}
+
+.step {
+  composes: card lift from "./LandingScreen.module.css";
+  align-items: flex-start;
+  display: flex;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-6);
+  position: relative;
+
+  &:hover {
+    transform: translateX(4px);
+  }
+
+  &:not(:last-child)::after {
+    background: linear-gradient(var(--brand), transparent);
+    content: "";
+    height: var(--space-4);
+    left: calc(var(--space-6) + 24px);
+    position: absolute;
+    top: 100%;
+    width: 2px;
+  }
+}
+
+.steps {
+  composes: band from "./LandingScreen.module.css";
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-1);
+}
+
+.title {
+  composes: title from "./LandingScreen.module.css";
+}

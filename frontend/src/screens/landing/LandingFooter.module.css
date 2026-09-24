@@ -1,0 +1,41 @@
+.about {
+  display: flex;
+  flex: 1 1 380px;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.footer {
+  background: var(--surface);
+  border-top: var(--border-width-hairline) solid var(--border);
+  padding: calc(var(--space-8) * 2) 0;
+}
+
+.inner {
+  composes: inner from "./LandingScreen.module.css";
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--space-8) * 2);
+}
+
+.link {
+  color: var(--ink-muted);
+  font: var(--type-body-sm);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--ink);
+  }
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.tagline {
+  color: var(--ink-muted);
+  font: var(--type-body-sm);
+  margin: 0;
+}

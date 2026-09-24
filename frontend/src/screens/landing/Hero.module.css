@@ -1,0 +1,104 @@
+.accent {
+  background: linear-gradient(100deg, var(--brand), var(--accent));
+  background-clip: text;
+  color: transparent;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.badge {
+  align-items: center;
+  align-self: flex-start;
+  background: var(--surface);
+  border: var(--border-width-hairline) solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--ink-secondary);
+  display: inline-flex;
+  font: var(--type-body-sm);
+  font-weight: 600;
+  gap: var(--space-2);
+  padding: 6px var(--space-3);
+}
+
+.copy {
+  composes: rise from "./LandingScreen.module.css";
+  display: flex;
+  flex: 1 1 480px;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.headline {
+  font: var(--type-hero);
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 620px;
+}
+
+.hero {
+  background:
+    radial-gradient(
+      60% 70% at 85% 20%,
+      color-mix(in srgb, var(--brand) 16%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      50% 60% at 10% 90%,
+      color-mix(in srgb, var(--accent) 12%, transparent),
+      transparent
+    ),
+    var(--canvas);
+  overflow: hidden;
+  padding: calc(var(--space-10) * 2) 0 calc(var(--space-8) * 3);
+}
+
+.inner {
+  composes: inner from "./LandingScreen.module.css";
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--space-8) * 2);
+}
+
+.lead {
+  color: var(--ink-secondary);
+  font-size: 17px;
+  line-height: 26px;
+  margin: 0;
+  max-width: 500px;
+}
+
+.point {
+  align-items: center;
+  color: var(--ink-secondary);
+  display: inline-flex;
+  font: var(--type-body-sm);
+  gap: 6px;
+}
+
+.pulse {
+  background: var(--accent);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+  height: 8px;
+  width: 8px;
+}
+
+.source {
+  composes: button from "@/components/Button/Button.module.css";
+  text-decoration: none;
+}
+
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}

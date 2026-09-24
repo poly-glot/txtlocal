@@ -64,6 +64,7 @@ IF_NO_RECHARGE_IN_FLIGHT = (
 IF_NO_STRIPE_CUSTOMER = "attribute_exists(PK) AND attribute_not_exists(stripeCustomerId)"
 IF_NOT_LOW_BALANCE_ALERTED = "attribute_exists(PK) AND attribute_not_exists(lowBalanceAlertedAt)"
 IF_RECHARGE_IN_FLIGHT = "attribute_exists(PK) AND attribute_exists(rechargeInFlight)"
+IF_STRIPE_CUSTOMER_IS = "stripeCustomerId = :stale"
 KIND_IS_TOPUP = "kind = :topup"
 MARK_TOPUP_PAID = "SET #status = :paid, invoiceNumber = :num, invoiceUrl = :url"
 OWN_PARTITION = "PK = :pk"
@@ -118,7 +119,9 @@ class BillingRepo(Protocol):
 
     async def rental_charged(self, sender_id: str, period: datetime) -> bool: ...
 
-    async def save_stripe_customer_id(self, account_id: str, customer_id: str) -> bool: ...
+    async def save_stripe_customer_id(
+        self, account_id: str, customer_id: str, replacing: str | None
+    ) -> bool: ...
 
     async def set_low_balance_alerted(self, account_id: str, now: datetime) -> bool: ...
 
@@ -283,13 +286,12 @@ class BillingDynamoRepo:
             self._ledger_put(account_id, entry),
         )
 
-    async def save_stripe_customer_id(self, account_id: str, customer_id: str) -> bool:
-        return await self._update(
-            account_key(account_id),
-            SET_STRIPE_CUSTOMER,
-            {":id": s(customer_id)},
-            IF_NO_STRIPE_CUSTOMER,
-        )
+    async def save_stripe_customer_id(
+        self, account_id: str, customer_id: str, replacing: str | None
+    ) -> bool:
+        values = {":id": s(customer_id)} | ({} if replacing is None else {":stale": s(replacing)})
+        condition = IF_NO_STRIPE_CUSTOMER if replacing is None else IF_STRIPE_CUSTOMER_IS
+        return await self._update(account_key(account_id), SET_STRIPE_CUSTOMER, values, condition)
 
     async def set_recharge_in_flight(self, account_id: str, now: datetime) -> bool:
         return await self._update(

@@ -13,7 +13,6 @@ from txtlocal.shared.errors import (
 )
 from txtlocal.shared.money import Micro
 from txtlocal.shared.testing import RecordingBus
-from txtlocal.slices.billing.gateway import FakePaymentGateway
 from txtlocal.slices.billing.model import (
     DEFAULT_RECHARGE_AMOUNT_MICRO,
     Balance,
@@ -37,10 +36,12 @@ from txtlocal.slices.billing.service import (
 )
 from txtlocal.slices.billing.tests.fakes import (
     ACCOUNT_ID,
+    CHECKOUT_URL,
     NOW,
     ZERO,
     FakeContact,
     FakeContacts,
+    FakePaymentGateway,
     InMemoryBillingRepo,
     RecordingEmail,
     account_row,
@@ -331,7 +332,7 @@ def full_billing(
     now: datetime = NOW,
 ) -> BillingService:
     return BillingService(
-        bus=bus,
+        bus=RecordingBus() if bus is None else bus,
         clock=lambda: now,
         contacts=contacts,
         email=email,
@@ -642,14 +643,14 @@ async def test_create_top_up_a_boost_creates_a_pending_row_and_a_checkout_url() 
     repo = InMemoryBillingRepo()
     account_row(repo, has_topped_up=True)
     repo.rates[("GB", Product.SMS)] = Micro(42_700)
-    gateway = FakePaymentGateway(clock=lambda: NOW, public_base_url="http://localhost:3000")
+    gateway = FakePaymentGateway()
     service = full_billing(repo, contacts=contacts_of(), gateway=gateway)
 
     created = await service.create_top_up(
         ACCOUNT_ID, CreateTopUpRequest(code="BOOST_10", kind=TopUpKind.BOOST), NOW
     )
 
-    assert created.checkout_url.startswith("http://localhost:3000/api/app/demo/checkout/")
+    assert created.checkout_url.startswith(CHECKOUT_URL)
     top_up = repo.topups[(ACCOUNT_ID, created.top_up_id)]
     assert (top_up.amount_micro, top_up.credited_micro) == (10_000_000, 10_000_000)
     assert repo.accounts[ACCOUNT_ID].stripe_customer_id is not None
@@ -662,7 +663,7 @@ async def test_create_top_up_a_pack_credits_the_boosted_amount() -> None:
     service = full_billing(
         repo,
         contacts=contacts_of(),
-        gateway=FakePaymentGateway(clock=lambda: NOW, public_base_url="http://localhost:3000"),
+        gateway=FakePaymentGateway(),
     )
 
     created = await service.create_top_up(
@@ -674,19 +675,33 @@ async def test_create_top_up_a_pack_credits_the_boosted_amount() -> None:
 
 
 async def test_create_top_up_reuses_an_existing_stripe_customer() -> None:
+    gateway = FakePaymentGateway()
+    existing = await gateway.ensure_customer(ACCOUNT_ID, "a@b.example")
     repo = InMemoryBillingRepo()
-    account_row(repo, has_topped_up=True, stripe_customer_id="cus_existing")
+    account_row(repo, has_topped_up=True, stripe_customer_id=existing)
     repo.rates[("GB", Product.SMS)] = Micro(42_700)
-    gateway = FakePaymentGateway(clock=lambda: NOW, public_base_url="http://localhost:3000")
     service = full_billing(repo, contacts=contacts_of(), gateway=gateway)
 
     await service.create_top_up(
         ACCOUNT_ID, CreateTopUpRequest(code="BOOST_10", kind=TopUpKind.BOOST), NOW
     )
 
-    assert repo.accounts[ACCOUNT_ID].stripe_customer_id == "cus_existing"
-    [session] = list(gateway.store.sessions.values())
-    assert session.customer_id == "cus_existing"
+    assert repo.accounts[ACCOUNT_ID].stripe_customer_id == existing
+    assert list(gateway.customers) == [existing]
+
+
+async def test_create_top_up_replaces_a_saved_customer_stripe_no_longer_has() -> None:
+    repo = InMemoryBillingRepo()
+    account_row(repo, has_topped_up=True, stripe_customer_id="cus_demo_gone")
+    repo.rates[("GB", Product.SMS)] = Micro(42_700)
+    gateway = FakePaymentGateway()
+    service = full_billing(repo, contacts=contacts_of(), gateway=gateway)
+
+    await service.create_top_up(
+        ACCOUNT_ID, CreateTopUpRequest(code="BOOST_10", kind=TopUpKind.BOOST), NOW
+    )
+
+    assert list(gateway.customers) == [repo.accounts[ACCOUNT_ID].stripe_customer_id]
 
 
 async def test_create_top_up_with_an_unknown_code_is_bad_request() -> None:
@@ -696,7 +711,7 @@ async def test_create_top_up_with_an_unknown_code_is_bad_request() -> None:
     service = full_billing(
         repo,
         contacts=contacts_of(),
-        gateway=FakePaymentGateway(clock=lambda: NOW, public_base_url=""),
+        gateway=FakePaymentGateway(),
     )
 
     with pytest.raises(BadRequest):
@@ -718,7 +733,7 @@ async def test_create_top_up_without_a_gateway_configured_is_internal() -> None:
 
 
 async def test_cards_lists_the_seeded_visa_and_declining_card() -> None:
-    gateway = FakePaymentGateway(clock=lambda: NOW, public_base_url="")
+    gateway = FakePaymentGateway()
     customer_id = await gateway.ensure_customer(ACCOUNT_ID, "a@b.example")
     repo = InMemoryBillingRepo()
     account_row(repo, has_topped_up=True, stripe_customer_id=customer_id)

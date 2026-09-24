@@ -29,15 +29,6 @@ beforeEach(async () => {
 });
 
 describe("appRoutes", () => {
-  it("renders a not-in-this-release page for an excluded entry", async () => {
-    renderApp("/automation");
-
-    expect(
-      await screen.findByRole("heading", { level: 2, name: "Automation" }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("Not in this release.")).toBeInTheDocument();
-  });
-
   it("opens Billing on the Top Up Account tab", async () => {
     renderApp("/billing");
 

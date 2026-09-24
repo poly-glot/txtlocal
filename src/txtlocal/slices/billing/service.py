@@ -377,14 +377,14 @@ def checked_contact_mobile(value: str | None, default_country: str) -> str | Non
 
 @dataclass(frozen=True, slots=True)
 class BillingService:
+    bus: Bus
     clock: Clock
+    public_base_url: str
     repo: BillingRepo
-    bus: Bus | None = None
     contacts: AccountContacts | None = None
     email: Email | None = None
     gateway: PaymentGateway | None = None
     numbers: DedicatedNumbers | None = None
-    public_base_url: str = ""
 
     async def open_account(self, account_id: str, now: datetime) -> None:
         entry = ledger_entry(LedgerKind.TRIAL, TRIAL_CREDIT_MICRO, TRIAL_CREDIT_MICRO, now)
@@ -761,8 +761,6 @@ class BillingService:
         )
 
     async def _enqueue_recharge(self, account_id: str, now: datetime) -> None:
-        if self.bus is None:
-            return
         if await self.repo.set_recharge_in_flight(account_id, now):
             job = RechargeJob(account_id=account_id, job_id=str(uuid.uuid7()))
             await self.bus.send(Queue.RECHARGE, [Message(body=job.model_dump_json(by_alias=True))])
@@ -770,10 +768,12 @@ class BillingService:
     async def _ensure_customer(
         self, account_id: str, account: BillingAccount, contact: ContactDetails
     ) -> str:
-        if account.stripe_customer_id is not None:
-            return account.stripe_customer_id
+        saved = account.stripe_customer_id
+        if saved is not None and await self._gateway().customer_exists(saved):
+            return saved
+
         customer_id = await self._gateway().ensure_customer(account_id, contact.email)
-        await self.repo.save_stripe_customer_id(account_id, customer_id)
+        await self.repo.save_stripe_customer_id(account_id, customer_id, replacing=saved)
         return customer_id
 
     async def _owned_customer(self, account_id: str, payment_method_id: str) -> str:

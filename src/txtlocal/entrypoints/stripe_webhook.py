@@ -1,9 +1,11 @@
 import base64
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 from enum import StrEnum
 from typing import TYPE_CHECKING, Protocol, TypedDict
+
+from fastapi import APIRouter, Request, Response
 
 from txtlocal.shared import runtime, telemetry
 from txtlocal.shared.clock import utc_now
@@ -16,6 +18,7 @@ if TYPE_CHECKING:
     from txtlocal.slices.billing.gateway import PaymentEvent, PaymentGateway
 
 CHECKOUT_COMPLETED = "checkout.session.completed"
+LOCAL_PATH = "/api/stripe-webhook"
 PAYMENT_INTENT_SUCCEEDED = "payment_intent.succeeded"
 SETUP_SUCCEEDED = "setup_intent.succeeded"
 SIGNATURE_HEADER = "stripe-signature"
@@ -61,7 +64,7 @@ class StripeWebhook:
         event = self.gateway.verify_webhook(payload, signature, self.clock())
 
         if event.event_type == CHECKOUT_COMPLETED and event.mode != SETUP_MODE:
-            await self.billing.credit_top_up(event, self.clock())
+            await self.billing.credit_top_up(await self._with_invoice(event), self.clock())
             return WebhookAnswer(outcome=WebhookOutcome.CREDITED)
 
         if event.event_type == PAYMENT_INTENT_SUCCEEDED and event.kind == RECHARGE_KIND:
@@ -86,6 +89,13 @@ class StripeWebhook:
             await self.gateway.set_default(event.customer_id, event.payment_method_id)
         return WebhookAnswer(outcome=WebhookOutcome.RECORDED)
 
+    async def _with_invoice(self, event: PaymentEvent) -> PaymentEvent:
+        if event.invoice_id is None:
+            return event
+
+        invoice = await self.gateway.invoice(event.invoice_id)
+        return replace(event, invoice_number=invoice.number, invoice_url=invoice.url)
+
 
 def body_of(event: FunctionUrlEvent) -> bytes:
     body = event.get("body", "")
@@ -100,6 +110,24 @@ def header_of(event: FunctionUrlEvent, name: str) -> str:
 
 def response_of(status_code: int, body: object) -> FunctionUrlResponse:
     return {"body": json.dumps(body), "statusCode": status_code}
+
+
+def build_local_router(webhook: StripeWebhook) -> APIRouter:
+    router = APIRouter()
+
+    @router.post(LOCAL_PATH, include_in_schema=False)
+    async def receive(request: Request) -> Response:
+        event = FunctionUrlEvent(
+            body=(await request.body()).decode(),
+            headers=dict(request.headers),
+            isBase64Encoded=False,
+        )
+        answer = await handle_event(webhook, event)
+        return Response(
+            answer["body"], media_type="application/json", status_code=answer["statusCode"]
+        )
+
+    return router
 
 
 from txtlocal.entrypoints import wiring

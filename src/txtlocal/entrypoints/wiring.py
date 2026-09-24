@@ -16,6 +16,7 @@ from txtlocal.entrypoints.delivery_events import DeliveryEvents
 from txtlocal.entrypoints.inbound import Inbound
 from txtlocal.entrypoints.send_worker import SendWorker
 from txtlocal.entrypoints.stripe_webhook import StripeWebhook
+from txtlocal.entrypoints.stripe_webhook import build_local_router as build_local_stripe_router
 from txtlocal.entrypoints.webhook_dispatch import WebhookDispatch
 from txtlocal.shared import runtime
 from txtlocal.shared.bus import Bus, Handler, LocalBus, Queue, SqsBus, Topic
@@ -42,11 +43,9 @@ from txtlocal.slices.automation.service import AutomationService, Email, Logging
 from txtlocal.slices.billing.gateway import (
     CONNECT_TIMEOUT_SECONDS,
     TOTAL_TIMEOUT_SECONDS,
-    FakePaymentGateway,
     PaymentGateway,
     StripeGateway,
 )
-from txtlocal.slices.billing.gateway import build_demo_router as build_billing_demo_router
 from txtlocal.slices.billing.repo import BillingDynamoRepo
 from txtlocal.slices.billing.router import build_router as build_billing_router
 from txtlocal.slices.billing.service import BillingService
@@ -254,9 +253,6 @@ def gateway() -> SmsGateway:
 @functools.cache
 def payment_gateway() -> PaymentGateway:
     config = settings()
-    if not config.stripe_secret_key:
-        return FakePaymentGateway(clock=utc_now, public_base_url=config.public_base_url)
-
     creator = httpx.AsyncClient(
         timeout=httpx.Timeout(TOTAL_TIMEOUT_SECONDS, connect=CONNECT_TIMEOUT_SECONDS)
     )
@@ -304,11 +300,13 @@ class LazyBillingGate:
 @functools.cache
 def billing() -> BillingService:
     return BillingService(
+        bus=bus(),
         clock=utc_now,
         contacts=LazyAccountContacts(),
         email=email(),
         gateway=payment_gateway(),
         numbers=dedicated_numbers(),
+        public_base_url=settings().public_base_url,
         repo=BillingDynamoRepo(table()),
     )
 
@@ -678,13 +676,11 @@ def routers() -> list[APIRouter]:
     if idp is not None:
         built.append(build_dev_idp_router(idp))
 
+    if settings().dynamodb_endpoint is not None:
+        built.append(build_local_stripe_router(stripe_webhook()))
+
     if settings().sms_mode is SmsMode.FAKE:
         built.append(build_demo_router(bus()))
         built.append(build_email_demo_router(automation()))
-
-    if not settings().stripe_secret_key:
-        gw = payment_gateway()
-        if isinstance(gw, FakePaymentGateway):
-            built.append(build_billing_demo_router(gw, stripe_webhook()))
 
     return built

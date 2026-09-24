@@ -1,0 +1,87 @@
+.band {
+  padding: calc(var(--space-8) * 3) 0;
+}
+
+.card {
+  background: var(--surface);
+  border: var(--border-width-hairline) solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.eyebrow {
+  color: var(--brand);
+  font: var(--type-caption-caps);
+  letter-spacing: var(--tracking-caption-caps);
+  text-transform: uppercase;
+}
+
+.heading {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.inner {
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 0 var(--space-6);
+  width: 100%;
+}
+
+.lead {
+  color: var(--ink-secondary);
+  margin: 0;
+  max-width: 560px;
+}
+
+.lift {
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--brand) 35%, var(--border));
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  background: var(--canvas);
+  min-height: 100vh;
+}
+
+.rise {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: rise 600ms ease-out both;
+  }
+}
+
+.sunken {
+  background: var(--surface);
+}
+
+.title {
+  font: var(--type-heading-xl);
+  letter-spacing: var(--tracking-display);
+  margin: 0;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

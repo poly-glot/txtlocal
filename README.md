@@ -90,7 +90,22 @@ pull request there first.
 | `ATHENA_OUTPUT`, `ATHENA_WORKGROUP`, `GLUE_DATABASE`, `GLUE_TABLE`, `LOGS_BUCKET` | `rollup`                                     | the shared analytics module                        |
 
 Locally `.env.example` becomes `.env`; `scripts/dev.sh` sources it and forces `SMS_MODE=fake` and
-`BUS=local`, so nothing on a laptop can reach AWS.
+`BUS=local`, so nothing on a laptop can reach AWS. Payments go to a Stripe sandbox even there: with
+its secret key in `.env` as `STRIPE_SECRET_KEY`, `scripts/dev.sh` runs `stripe listen` in the dev
+container and forwards the sandbox's webhooks to the API (`docs/runbook.md` section 4).
+
+`.env` is gitignored; the committed `.env.enc` is that file with its values encrypted by SOPS for the
+age recipient in `.sops.yaml`. The matching private key is the `sops-key` secret in the
+`firebase-cloud-491613` Google Cloud project, the one age key every project that encrypts this way
+shares, so a fresh machine recovers `.env` with:
+
+```bash
+export SOPS_AGE_KEY="$(gcloud secrets versions access latest --secret sops-key --project firebase-cloud-491613)"
+sops --decrypt --input-type dotenv --output-type dotenv .env.enc > .env
+```
+
+After changing `.env`, `sops --encrypt --input-type dotenv --output-type dotenv .env > .env.enc`
+writes the file to commit.
 
 Three things are set after the first apply, because they exist only once the resources do: the
 Cognito client id and issuer into the function environment through `aws-cloud`, the Stripe webhook
@@ -289,7 +304,7 @@ Vitest and `check:api`; `frontend/CLAUDE.md` holds the rules.
 only in their handler. It then builds the page and syncs `frontend/dist` to
 `s3://$SITES_BUCKET/txtlocal/` and invalidates the distribution.
 
-The repository needs one secret and five variables, all from the `outputs` artifact of the `aws-cloud`
+The repository needs one secret and four variables, all from the `outputs` artifact of the `aws-cloud`
 apply:
 
 ```bash
@@ -298,7 +313,6 @@ gh variable set SITES_BUCKET      -R poly-glot/txtlocal --body "$(jq -r .apps.va
 gh variable set DISTRIBUTION_ID   -R poly-glot/txtlocal --body "$(jq -r .apps.value.txtlocal.distribution_id outputs.json)"
 gh variable set COGNITO_CLIENT_ID -R poly-glot/txtlocal
 gh variable set COGNITO_DOMAIN    -R poly-glot/txtlocal
-gh variable set STRIPE_PUBLISHABLE_KEY -R poly-glot/txtlocal
 ```
 
 The zip must stay under the 50 MB direct-upload limit; the workflow fails loudly when it does not, and

@@ -7,6 +7,9 @@
   --brand: light-dark(#2657c4, #6e9cff);
   --brand-hover: light-dark(#1c4194, #9dbcff);
   --canvas: light-dark(#eef1f8, #14171f);
+  --code-ink: #e6e9f2;
+  --code-muted: #8b93a7;
+  --code-surface: #151a24;
   --control-height: 44px;
   --danger-ink: light-dark(#b42318, #f97066);
   --danger-surface: light-dark(#fef3f2, #3b1c1a);
@@ -22,6 +25,10 @@
   --radius-sm: 6px;
   --scrim: light-dark(rgb(31 36 48 / 45%), rgb(0 0 0 / 60%));
   --shadow: light-dark(0 8px 24px rgb(31 36 48 / 12%), 0 8px 24px rgb(0 0 0 / 50%));
+  --shadow-lift: light-dark(
+    0 24px 48px -12px rgb(38 87 196 / 28%),
+    0 24px 48px -12px rgb(0 0 0 / 60%)
+  );
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -45,6 +52,8 @@
   --type-caption-caps: 700 11px/16px var(--font-sans);
   --type-display: 700 34px/40px var(--font-sans);
   --type-heading-lg: 700 24px/30px var(--font-sans);
+  --type-heading-xl: 700 clamp(26px, 20px + 1.6vw, 36px) / 1.2 var(--font-sans);
+  --type-hero: 800 clamp(36px, 24px + 3.4vw, 60px) / 1.05 var(--font-sans);
   --type-heading-md: 600 17px/24px var(--font-sans);
   --type-heading-sm: 600 15px/20px var(--font-sans);
   --type-link: 600 14px/20px var(--font-sans);

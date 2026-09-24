@@ -1,0 +1,62 @@
+.avatar {
+  align-items: center;
+  background: var(--accent);
+  border-radius: var(--radius-full);
+  color: var(--on-accent);
+  display: flex;
+  flex-shrink: 0;
+  font: var(--type-caption-caps);
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.card {
+  composes: card from "./LandingScreen.module.css";
+  box-shadow: var(--shadow-lift);
+  display: flex;
+  flex: 1 1 420px;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-6);
+}
+
+.footer {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.bubble {
+  border-radius: var(--radius-md);
+  font: var(--type-body-sm);
+  margin: 0;
+  max-width: 260px;
+  padding: var(--space-3) 14px;
+}
+
+.inbound {
+  composes: bubble;
+  align-self: flex-start;
+  background: var(--surface-sunken);
+}
+
+.outbound {
+  composes: bubble;
+  align-self: flex-end;
+  background: var(--surface-selected);
+}
+
+.repliedBy {
+  color: var(--ink-muted);
+  font: var(--type-body-sm);
+}
+
+.title {
+  font: var(--type-caption-caps);
+  letter-spacing: var(--tracking-caption-caps);
+  text-align: center;
+  text-transform: uppercase;
+}

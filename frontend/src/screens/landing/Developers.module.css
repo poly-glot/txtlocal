@@ -1,0 +1,62 @@
+.copy {
+  display: flex;
+  flex: 1 1 400px;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.developers {
+  composes: band sunken from "./LandingScreen.module.css";
+}
+
+.eyebrow {
+  composes: eyebrow from "./LandingScreen.module.css";
+}
+
+.inner {
+  composes: inner from "./LandingScreen.module.css";
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--space-8) * 2);
+}
+
+.lead {
+  composes: lead from "./LandingScreen.module.css";
+}
+
+.point {
+  align-items: center;
+  display: flex;
+  font: var(--type-body-strong);
+  gap: var(--space-3);
+}
+
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  margin: var(--space-2) 0;
+  padding: 0;
+}
+
+.reference {
+  align-self: flex-start;
+  font: var(--type-link);
+}
+
+.tick {
+  align-items: center;
+  background: var(--surface-selected);
+  border-radius: var(--radius-full);
+  color: var(--brand);
+  display: flex;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.title {
+  composes: title from "./LandingScreen.module.css";
+}

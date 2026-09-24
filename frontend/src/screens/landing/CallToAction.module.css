@@ -1,0 +1,36 @@
+.cta {
+  padding: calc(var(--space-8) * 2) 0 calc(var(--space-8) * 3);
+}
+
+.inner {
+  composes: inner from "./LandingScreen.module.css";
+}
+
+.lead {
+  color: color-mix(in srgb, var(--on-brand) 85%, transparent);
+  margin: 0;
+  max-width: 460px;
+}
+
+.panel {
+  align-items: center;
+  background:
+    radial-gradient(
+      80% 120% at 100% 0%,
+      color-mix(in srgb, var(--accent) 55%, transparent),
+      transparent
+    ),
+    linear-gradient(135deg, var(--brand), var(--brand-hover));
+  border-radius: calc(var(--radius-lg) * 2);
+  box-shadow: var(--shadow-lift);
+  color: var(--on-brand);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: calc(var(--space-8) * 2) var(--space-6);
+  text-align: center;
+}
+
+.title {
+  composes: title from "./LandingScreen.module.css";
+}

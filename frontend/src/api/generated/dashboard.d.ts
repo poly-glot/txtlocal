@@ -573,24 +573,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/app/demo/checkout/{session_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Checkout Page */
-        get: operations["checkout_page_api_app_demo_checkout__session_id__get"];
-        put?: never;
-        /** Pay */
-        post: operations["pay_api_app_demo_checkout__session_id__post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/app/demo/inbound": {
         parameters: {
             query?: never;
@@ -4175,68 +4157,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ConversationView"];
-                };
-            };
-            /** @description Refused */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorBody"];
-                };
-            };
-        };
-    };
-    checkout_page_api_app_demo_checkout__session_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                session_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Refused */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorBody"];
-                };
-            };
-        };
-    };
-    pay_api_app_demo_checkout__session_id__post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                session_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
                 };
             };
             /** @description Refused */

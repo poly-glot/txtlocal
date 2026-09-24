@@ -2,16 +2,12 @@ import type { ComponentType } from "react";
 import { Navigate } from "react-router";
 import type { RouteObject } from "react-router";
 
-import { ComingSoon } from "@/components/ComingSoon/ComingSoon";
-import { NotInThisRelease } from "@/components/NotInThisRelease/NotInThisRelease";
 import { StatusMessage } from "@/components/StatusMessage/StatusMessage";
 import { API_CREDENTIALS_PATH, API_DOCS_PATH, BILLING_PATH, CALLBACK_PATH } from "@/lib/paths";
 import { BillingIndexRedirect } from "@/screens/billing/BillingIndexRedirect";
 import { BILLING_TABS } from "@/screens/billing/billingTabs";
 import type { BillingSlug } from "@/screens/billing/billingTabs";
 
-import { AVATAR_MENU, SIDEBAR, leavesOf } from "./navigation";
-import type { NavLeaf } from "./navigation";
 import { Shell } from "./shell/Shell";
 
 type LoadScreen = () => Promise<ComponentType>;
@@ -183,23 +179,6 @@ const built: RouteObject[] = [
   },
 ];
 
-const builtPaths = new Set(built.map((route) => route.path));
-
-const placeholders = new Map<string, RouteObject>();
-for (const leaf of [...leavesOf(SIDEBAR), ...AVATAR_MENU]) {
-  if (!builtPaths.has(leaf.path) && !placeholders.has(leaf.path)) {
-    placeholders.set(leaf.path, { element: placeholderFor(leaf), path: leaf.path });
-  }
-}
-
-function placeholderFor(leaf: NavLeaf) {
-  return leaf.excluded === true ? (
-    <NotInThisRelease name={leaf.label} />
-  ) : (
-    <ComingSoon name={leaf.label} />
-  );
-}
-
 export function appRoutes(): RouteObject[] {
   return [
     {
@@ -211,11 +190,7 @@ export function appRoutes(): RouteObject[] {
     },
     {
       HydrateFallback: StatusMessage,
-      children: [
-        ...built,
-        ...placeholders.values(),
-        { element: <Navigate replace to="/" />, path: "*" },
-      ],
+      children: [...built, { element: <Navigate replace to="/" />, path: "*" }],
       element: <Shell />,
     },
   ];

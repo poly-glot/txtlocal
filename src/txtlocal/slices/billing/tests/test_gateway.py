@@ -1,14 +1,20 @@
+import hmac
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from hashlib import sha256
 from urllib.parse import parse_qs
 
 import httpx
 import pytest
 
+from txtlocal.shared.errors import BadRequest
 from txtlocal.shared.money import Micro
 from txtlocal.slices.billing.gateway import (
+    NO_DEFAULT_CARD,
     RECHARGE_KIND,
     SETUP_MODE,
     ChargeStatus,
+    Invoice,
     OffSessionCharge,
     ReturnUrls,
     StripeGateway,
@@ -17,6 +23,13 @@ from txtlocal.slices.billing.gateway import (
 ACCOUNT_ID = "acc-1"
 CUSTOMER_ID = "cus_1"
 DEFAULT_CARD = "pm_1"
+DELETED_CUSTOMER = "cus_deleted"
+INVOICE_ID = "in_1"
+INVOICE_URL = "https://invoice.stripe.com/i/in_1"
+MISSING_CUSTOMER = "cus_demo_gone"
+NOW = datetime(2026, 9, 19, 12, 0, tzinfo=UTC)
+PAYLOAD = b'{"id": "evt_1", "type": "checkout.session.completed"}'
+WEBHOOK_SECRET = "whsec_test"
 
 
 @dataclass(slots=True)
@@ -25,6 +38,15 @@ class StripeServer:
     posts: dict[str, dict[str, list[str]]] = field(default_factory=dict)
 
     def handle(self, request: httpx.Request) -> httpx.Response:
+        if request.url.path == f"/v1/customers/{MISSING_CUSTOMER}":
+            return httpx.Response(404, json={"error": {"code": "resource_missing"}})
+
+        if request.url.path == f"/v1/customers/{DELETED_CUSTOMER}":
+            return httpx.Response(200, json={"deleted": True, "id": DELETED_CUSTOMER})
+
+        if request.url.path == f"/v1/invoices/{INVOICE_ID}":
+            return httpx.Response(200, json={"hosted_invoice_url": INVOICE_URL, "number": "INV-1"})
+
         if request.method == "GET":
             return httpx.Response(
                 200, json={"invoice_settings": {"default_payment_method": DEFAULT_CARD}}
@@ -34,12 +56,18 @@ class StripeServer:
         return httpx.Response(200, json={"id": "pi_1", "status": self.payment_intent_status})
 
 
-def gateway_over(server: StripeServer) -> StripeGateway:
+def gateway_over(server: StripeServer, webhook_secret: str = WEBHOOK_SECRET) -> StripeGateway:
     return StripeGateway(
         http=httpx.AsyncClient(transport=httpx.MockTransport(server.handle)),
         secret_key="sk_test",
-        webhook_secret="whsec_test",
+        webhook_secret=webhook_secret,
     )
+
+
+def signed(payload: bytes, secret: str) -> str:
+    timestamp = int(NOW.timestamp())
+    digest = hmac.new(secret.encode(), f"{timestamp}.".encode() + payload, sha256).hexdigest()
+    return f"t={timestamp},v1={digest}"
 
 
 async def charge(server: StripeServer) -> None:
@@ -95,6 +123,32 @@ async def test_charge_off_session_reads_the_intent_status(
     assert outcome.status is expected
 
 
+@pytest.mark.parametrize(
+    ("customer_id", "expected"),
+    [(CUSTOMER_ID, True), (MISSING_CUSTOMER, False), (DELETED_CUSTOMER, False)],
+    ids=["live", "unknown-to-stripe", "deleted"],
+)
+async def test_customer_exists_asks_stripe(customer_id: str, expected: bool) -> None:
+    assert await gateway_over(StripeServer()).customer_exists(customer_id) is expected
+
+
+async def test_payment_methods_of_a_customer_stripe_does_not_have_is_empty() -> None:
+    assert await gateway_over(StripeServer()).payment_methods(MISSING_CUSTOMER) == []
+
+
+async def test_charge_off_session_declines_for_a_customer_stripe_does_not_have() -> None:
+    outcome = await gateway_over(StripeServer()).charge_off_session(
+        OffSessionCharge(
+            account_id=ACCOUNT_ID,
+            amount_micro=Micro(10_000_000),
+            customer_id=MISSING_CUSTOMER,
+            idempotency_key="recharge_job-1",
+        )
+    )
+
+    assert (outcome.status, outcome.decline_code) == (ChargeStatus.DECLINED, NO_DEFAULT_CARD)
+
+
 async def test_setup_session_asks_stripe_for_a_setup_mode_checkout() -> None:
     server = StripeServer()
 
@@ -103,3 +157,24 @@ async def test_setup_session_asks_stripe_for_a_setup_mode_checkout() -> None:
     )
 
     assert server.posts["/v1/checkout/sessions"]["mode"] == [SETUP_MODE]
+
+
+async def test_invoice_reads_the_number_and_hosted_url() -> None:
+    invoice = await gateway_over(StripeServer()).invoice(INVOICE_ID)
+
+    assert invoice == Invoice(number="INV-1", url=INVOICE_URL)
+
+
+def test_verify_webhook_accepts_a_payload_signed_with_the_secret() -> None:
+    event = gateway_over(StripeServer()).verify_webhook(
+        PAYLOAD, signed(PAYLOAD, WEBHOOK_SECRET), NOW
+    )
+
+    assert event.event_id == "evt_1"
+
+
+def test_verify_webhook_refuses_every_signature_without_a_secret() -> None:
+    gateway = gateway_over(StripeServer(), webhook_secret="")
+
+    with pytest.raises(BadRequest):
+        gateway.verify_webhook(PAYLOAD, signed(PAYLOAD, ""), NOW)

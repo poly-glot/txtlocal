@@ -6,7 +6,7 @@ import pytest
 from txtlocal.shared.errors import PaymentRequired
 from txtlocal.shared.money import Micro
 from txtlocal.shared.table import Table, key, n
-from txtlocal.shared.testing import local_repo_table
+from txtlocal.shared.testing import RecordingBus, local_repo_table
 from txtlocal.slices.billing.gateway import PaymentEvent
 from txtlocal.slices.billing.model import LedgerKind, LedgerOrder, TopUp, TopUpKind, TopUpStatus
 from txtlocal.slices.billing.repo import (
@@ -42,7 +42,9 @@ async def seed_account(
         "hasToppedUp": {"BOOL": has_topped_up},
     }
     await table.client.put_item(Item=item, TableName=table.name)
-    return BillingService(clock=lambda: NOW, repo=BillingDynamoRepo(table))
+    return BillingService(
+        bus=RecordingBus(), clock=lambda: NOW, public_base_url="", repo=BillingDynamoRepo(table)
+    )
 
 
 async def opened(table: Table) -> BillingService:
@@ -77,12 +79,34 @@ async def test_open_account_twice_loses_the_condition_without_an_error() -> None
 async def test_open_account_before_the_account_row_creates_nothing() -> None:
     async with local_repo_table("billing") as table:
         repo = BillingDynamoRepo(table)
-        service = BillingService(clock=lambda: NOW, repo=repo)
+        service = BillingService(
+            bus=RecordingBus(), clock=lambda: NOW, public_base_url="", repo=repo
+        )
 
         await service.open_account(ACCOUNT_ID, NOW)
 
         assert await repo.load_account(ACCOUNT_ID) is None
         assert (await repo.ledger_page(ACCOUNT_ID, None)).items == []
+
+
+@pytest.mark.parametrize(
+    ("replacing", "expected"),
+    [("cus_demo_gone", "cus_new"), ("cus_other", "cus_demo_gone")],
+    ids=["stale-id-matches", "stale-id-changed-meanwhile"],
+)
+async def test_save_stripe_customer_id_replaces_only_the_stale_id(
+    replacing: str, expected: str
+) -> None:
+    async with local_repo_table("billing") as table:
+        await seed_account(table)
+        repo = BillingDynamoRepo(table)
+        await repo.save_stripe_customer_id(ACCOUNT_ID, "cus_demo_gone", None)
+
+        await repo.save_stripe_customer_id(ACCOUNT_ID, "cus_new", replacing)
+
+        account = await repo.load_account(ACCOUNT_ID)
+        assert account is not None
+        assert account.stripe_customer_id == expected
 
 
 async def test_reserve_covering_the_balance_exactly_debits_it() -> None:
