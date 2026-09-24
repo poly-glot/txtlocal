@@ -48,6 +48,10 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
 
+      - run: uv run --no-dev python -m txtlocal.entrypoints.seed
+        env:
+          TABLE_NAME: aws-cloud
+
       - run: |
           for f in $FUNCTIONS; do
             aws lambda update-function-code --function-name "$APP-$f" --zip-file fileb://build/lambda.zip >/dev/null
