@@ -299,7 +299,9 @@ Vitest and `check:api`; `frontend/CLAUDE.md` holds the rules.
 
 `.github/workflows/deploy.yml` runs on every push to `main`. It builds one zip on an arm64 runner —
 `uv export` for the locked dependencies, `uv pip install --target` for `aarch64-manylinux2014` wheels,
-`src/txtlocal` on top — assumes `AWS_DEPLOY_ROLE_ARN` through GitHub's OIDC provider, and calls
+`src/txtlocal` on top — assumes `AWS_DEPLOY_ROLE_ARN` through GitHub's OIDC provider, writes the
+platform rows `entrypoints/seed.py` defines (rates, packs, number prices) into the `aws-cloud` table,
+which the role may do in the `txtlocal#PLATFORM` partition only, and calls
 `aws lambda update-function-code` once per function; the eleven functions share the artifact and differ
 only in their handler. It then builds the page and syncs `frontend/dist` to
 `s3://$SITES_BUCKET/txtlocal/` and invalidates the distribution.
