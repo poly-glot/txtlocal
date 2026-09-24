@@ -768,10 +768,12 @@ class BillingService:
     async def _ensure_customer(
         self, account_id: str, account: BillingAccount, contact: ContactDetails
     ) -> str:
-        if account.stripe_customer_id is not None:
-            return account.stripe_customer_id
+        saved = account.stripe_customer_id
+        if saved is not None and await self._gateway().customer_exists(saved):
+            return saved
+
         customer_id = await self._gateway().ensure_customer(account_id, contact.email)
-        await self.repo.save_stripe_customer_id(account_id, customer_id)
+        await self.repo.save_stripe_customer_id(account_id, customer_id, replacing=saved)
         return customer_id
 
     async def _owned_customer(self, account_id: str, payment_method_id: str) -> str:

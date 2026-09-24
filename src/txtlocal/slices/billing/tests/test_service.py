@@ -675,8 +675,24 @@ async def test_create_top_up_a_pack_credits_the_boosted_amount() -> None:
 
 
 async def test_create_top_up_reuses_an_existing_stripe_customer() -> None:
+    gateway = FakePaymentGateway()
+    existing = await gateway.ensure_customer(ACCOUNT_ID, "a@b.example")
     repo = InMemoryBillingRepo()
-    account_row(repo, has_topped_up=True, stripe_customer_id="cus_existing")
+    account_row(repo, has_topped_up=True, stripe_customer_id=existing)
+    repo.rates[("GB", Product.SMS)] = Micro(42_700)
+    service = full_billing(repo, contacts=contacts_of(), gateway=gateway)
+
+    await service.create_top_up(
+        ACCOUNT_ID, CreateTopUpRequest(code="BOOST_10", kind=TopUpKind.BOOST), NOW
+    )
+
+    assert repo.accounts[ACCOUNT_ID].stripe_customer_id == existing
+    assert list(gateway.customers) == [existing]
+
+
+async def test_create_top_up_replaces_a_saved_customer_stripe_no_longer_has() -> None:
+    repo = InMemoryBillingRepo()
+    account_row(repo, has_topped_up=True, stripe_customer_id="cus_demo_gone")
     repo.rates[("GB", Product.SMS)] = Micro(42_700)
     gateway = FakePaymentGateway()
     service = full_billing(repo, contacts=contacts_of(), gateway=gateway)
@@ -685,8 +701,7 @@ async def test_create_top_up_reuses_an_existing_stripe_customer() -> None:
         ACCOUNT_ID, CreateTopUpRequest(code="BOOST_10", kind=TopUpKind.BOOST), NOW
     )
 
-    assert repo.accounts[ACCOUNT_ID].stripe_customer_id == "cus_existing"
-    assert gateway.customers == {}
+    assert list(gateway.customers) == [repo.accounts[ACCOUNT_ID].stripe_customer_id]
 
 
 async def test_create_top_up_with_an_unknown_code_is_bad_request() -> None:

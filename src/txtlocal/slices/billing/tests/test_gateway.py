@@ -10,6 +10,7 @@ import pytest
 from txtlocal.shared.errors import BadRequest
 from txtlocal.shared.money import Micro
 from txtlocal.slices.billing.gateway import (
+    NO_DEFAULT_CARD,
     RECHARGE_KIND,
     SETUP_MODE,
     ChargeStatus,
@@ -22,8 +23,10 @@ from txtlocal.slices.billing.gateway import (
 ACCOUNT_ID = "acc-1"
 CUSTOMER_ID = "cus_1"
 DEFAULT_CARD = "pm_1"
+DELETED_CUSTOMER = "cus_deleted"
 INVOICE_ID = "in_1"
 INVOICE_URL = "https://invoice.stripe.com/i/in_1"
+MISSING_CUSTOMER = "cus_demo_gone"
 NOW = datetime(2026, 9, 19, 12, 0, tzinfo=UTC)
 PAYLOAD = b'{"id": "evt_1", "type": "checkout.session.completed"}'
 WEBHOOK_SECRET = "whsec_test"
@@ -35,6 +38,12 @@ class StripeServer:
     posts: dict[str, dict[str, list[str]]] = field(default_factory=dict)
 
     def handle(self, request: httpx.Request) -> httpx.Response:
+        if request.url.path == f"/v1/customers/{MISSING_CUSTOMER}":
+            return httpx.Response(404, json={"error": {"code": "resource_missing"}})
+
+        if request.url.path == f"/v1/customers/{DELETED_CUSTOMER}":
+            return httpx.Response(200, json={"deleted": True, "id": DELETED_CUSTOMER})
+
         if request.url.path == f"/v1/invoices/{INVOICE_ID}":
             return httpx.Response(200, json={"hosted_invoice_url": INVOICE_URL, "number": "INV-1"})
 
@@ -112,6 +121,32 @@ async def test_charge_off_session_reads_the_intent_status(
     )
 
     assert outcome.status is expected
+
+
+@pytest.mark.parametrize(
+    ("customer_id", "expected"),
+    [(CUSTOMER_ID, True), (MISSING_CUSTOMER, False), (DELETED_CUSTOMER, False)],
+    ids=["live", "unknown-to-stripe", "deleted"],
+)
+async def test_customer_exists_asks_stripe(customer_id: str, expected: bool) -> None:
+    assert await gateway_over(StripeServer()).customer_exists(customer_id) is expected
+
+
+async def test_payment_methods_of_a_customer_stripe_does_not_have_is_empty() -> None:
+    assert await gateway_over(StripeServer()).payment_methods(MISSING_CUSTOMER) == []
+
+
+async def test_charge_off_session_declines_for_a_customer_stripe_does_not_have() -> None:
+    outcome = await gateway_over(StripeServer()).charge_off_session(
+        OffSessionCharge(
+            account_id=ACCOUNT_ID,
+            amount_micro=Micro(10_000_000),
+            customer_id=MISSING_CUSTOMER,
+            idempotency_key="recharge_job-1",
+        )
+    )
+
+    assert (outcome.status, outcome.decline_code) == (ChargeStatus.DECLINED, NO_DEFAULT_CARD)
 
 
 async def test_setup_session_asks_stripe_for_a_setup_mode_checkout() -> None:

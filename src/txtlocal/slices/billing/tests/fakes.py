@@ -114,9 +114,11 @@ class InMemoryBillingRepo:
         )
         return True
 
-    async def save_stripe_customer_id(self, account_id: str, customer_id: str) -> bool:
+    async def save_stripe_customer_id(
+        self, account_id: str, customer_id: str, replacing: str | None
+    ) -> bool:
         account = self.accounts.get(account_id)
-        if account is None or account.stripe_customer_id is not None:
+        if account is None or account.stripe_customer_id != replacing:
             return False
         self.accounts[account_id] = account.model_copy(update={"stripe_customer_id": customer_id})
         return True
@@ -372,6 +374,9 @@ class FakePaymentGateway:
             default=SEED_VISA.payment_method_id,
         )
         return customer_id
+
+    async def customer_exists(self, customer_id: str) -> bool:
+        return customer_id in self.customers
 
     async def checkout(
         self, _customer_id: str, _pack: Pack, _urls: ReturnUrls, _idempotency_key: str

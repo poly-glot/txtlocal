@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
 from hashlib import sha256
+from http import HTTPStatus
 from typing import Protocol, cast
 
 import httpx
@@ -105,6 +106,8 @@ class PaymentEvent:
 
 class PaymentGateway(Protocol):
     async def ensure_customer(self, account_id: str, email: str) -> str: ...
+
+    async def customer_exists(self, customer_id: str) -> bool: ...
 
     async def checkout(
         self, customer_id: str, pack: Pack, urls: ReturnUrls, idempotency_key: str
@@ -220,8 +223,15 @@ class StripeGateway:
         )
         return session_of(response)
 
+    async def customer_exists(self, customer_id: str) -> bool:
+        return await self._customer(customer_id) is not None
+
     async def payment_methods(self, customer_id: str) -> list[Card]:
-        default_id = await self._default_payment_method(customer_id)
+        customer = await self._customer(customer_id)
+        if customer is None:
+            return []
+
+        default_id = default_payment_method_of(customer)
         listing = await self._get(f"/payment_methods?customer={customer_id}&type=card")
         data = listing.get("data")
         items = data if isinstance(data, list) else []
@@ -290,8 +300,18 @@ class StripeGateway:
         return any(hmac.compare_digest(expected, value) for name, value in fields if name == "v1")
 
     async def _default_payment_method(self, customer_id: str) -> str | None:
-        customer = await self._get(f"/customers/{customer_id}")
-        return string_field(as_mapping(customer.get("invoice_settings")), "default_payment_method")
+        customer = await self._customer(customer_id)
+        return None if customer is None else default_payment_method_of(customer)
+
+    async def _customer(self, customer_id: str) -> Mapping[str, object] | None:
+        response = await self._request("GET", f"/customers/{customer_id}", None, None)
+        if response.status_code == HTTPStatus.NOT_FOUND:
+            return None
+        if not response.is_success:
+            raise stripe_upstream_error(response)
+
+        customer = as_mapping(response.json())
+        return None if customer.get("deleted") is True else customer
 
     async def _request(
         self, method: str, path: str, data: Mapping[str, str] | None, idempotency_key: str | None
@@ -352,6 +372,10 @@ def stripe_error_details(response: httpx.Response) -> Mapping[str, object]:
     except ValueError:
         return {}
     return as_mapping(as_mapping(body).get("error"))
+
+
+def default_payment_method_of(customer: Mapping[str, object]) -> str | None:
+    return string_field(as_mapping(customer.get("invoice_settings")), "default_payment_method")
 
 
 def stripe_upstream_error(response: httpx.Response) -> Upstream:
