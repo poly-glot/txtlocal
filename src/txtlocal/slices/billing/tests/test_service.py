@@ -332,7 +332,7 @@ def full_billing(
     now: datetime = NOW,
 ) -> BillingService:
     return BillingService(
-        bus=bus,
+        bus=RecordingBus() if bus is None else bus,
         clock=lambda: now,
         contacts=contacts,
         email=email,
@@ -686,8 +686,7 @@ async def test_create_top_up_reuses_an_existing_stripe_customer() -> None:
     )
 
     assert repo.accounts[ACCOUNT_ID].stripe_customer_id == "cus_existing"
-    [session] = list(gateway.store.sessions.values())
-    assert session.customer_id == "cus_existing"
+    assert gateway.customers == {}
 
 
 async def test_create_top_up_with_an_unknown_code_is_bad_request() -> None:

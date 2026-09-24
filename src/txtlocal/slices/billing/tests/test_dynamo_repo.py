@@ -6,7 +6,7 @@ import pytest
 from txtlocal.shared.errors import PaymentRequired
 from txtlocal.shared.money import Micro
 from txtlocal.shared.table import Table, key, n
-from txtlocal.shared.testing import local_repo_table
+from txtlocal.shared.testing import RecordingBus, local_repo_table
 from txtlocal.slices.billing.gateway import PaymentEvent
 from txtlocal.slices.billing.model import LedgerKind, LedgerOrder, TopUp, TopUpKind, TopUpStatus
 from txtlocal.slices.billing.repo import (
@@ -42,7 +42,9 @@ async def seed_account(
         "hasToppedUp": {"BOOL": has_topped_up},
     }
     await table.client.put_item(Item=item, TableName=table.name)
-    return BillingService(clock=lambda: NOW, repo=BillingDynamoRepo(table))
+    return BillingService(
+        bus=RecordingBus(), clock=lambda: NOW, public_base_url="", repo=BillingDynamoRepo(table)
+    )
 
 
 async def opened(table: Table) -> BillingService:
@@ -77,7 +79,9 @@ async def test_open_account_twice_loses_the_condition_without_an_error() -> None
 async def test_open_account_before_the_account_row_creates_nothing() -> None:
     async with local_repo_table("billing") as table:
         repo = BillingDynamoRepo(table)
-        service = BillingService(clock=lambda: NOW, repo=repo)
+        service = BillingService(
+            bus=RecordingBus(), clock=lambda: NOW, public_base_url="", repo=repo
+        )
 
         await service.open_account(ACCOUNT_ID, NOW)
 

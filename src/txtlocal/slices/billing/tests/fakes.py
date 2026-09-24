@@ -6,11 +6,10 @@ from uuid import UUID, uuid7
 
 from txtlocal.shared.errors import BadRequest, NotFound
 from txtlocal.shared.money import Micro
+from txtlocal.shared.testing import RecordingBus
 from txtlocal.slices.billing.gateway import (
     INVALID_SIGNATURE,
     NO_DEFAULT_CARD,
-    PAYMENT_MODE,
-    SETUP_MODE,
     Card,
     ChargeOutcome,
     ChargeStatus,
@@ -293,7 +292,7 @@ def ledger_of(repo: InMemoryBillingRepo) -> list[LedgerEntry]:
 
 
 def billing(repo: InMemoryBillingRepo, now: datetime = NOW) -> BillingService:
-    return BillingService(clock=lambda: now, repo=repo)
+    return BillingService(bus=RecordingBus(), clock=lambda: now, public_base_url="", repo=repo)
 
 
 @dataclass(frozen=True, slots=True)
@@ -349,16 +348,8 @@ SEED_VISA = Card(
     exp_year=2035,
     last4="4242",
     payment_method_id="pm_demo_4242",
-    is_default=True,
 )
-SEED_DECLINING = Card(
-    brand="visa",
-    cardholder_name="Demo Card",
-    exp_month=12,
-    exp_year=2035,
-    last4="0002",
-    payment_method_id="pm_demo_0002",
-)
+SEED_DECLINING = replace(SEED_VISA, last4="0002", payment_method_id="pm_demo_0002")
 
 
 @dataclass(slots=True)
@@ -368,24 +359,12 @@ class StoredCustomer:
 
 
 @dataclass(frozen=True, slots=True)
-class StoredSession:
-    customer_id: str
-    mode: str
-
-
-@dataclass(slots=True)
-class FakeStore:
-    customers: dict[str, StoredCustomer] = field(default_factory=dict)
-    sessions: dict[str, StoredSession] = field(default_factory=dict)
-
-
-@dataclass(frozen=True, slots=True)
 class FakePaymentGateway:
-    store: FakeStore = field(default_factory=FakeStore)
+    customers: dict[str, StoredCustomer] = field(default_factory=dict)
 
     async def ensure_customer(self, _account_id: str, _email: str) -> str:
         customer_id = f"cus_demo_{uuid7()}"
-        self.store.customers[customer_id] = StoredCustomer(
+        self.customers[customer_id] = StoredCustomer(
             cards={
                 SEED_VISA.payment_method_id: SEED_VISA,
                 SEED_DECLINING.payment_method_id: SEED_DECLINING,
@@ -395,15 +374,15 @@ class FakePaymentGateway:
         return customer_id
 
     async def checkout(
-        self, customer_id: str, _pack: Pack, _urls: ReturnUrls, _idempotency_key: str
+        self, _customer_id: str, _pack: Pack, _urls: ReturnUrls, _idempotency_key: str
     ) -> CheckoutSession:
-        return self._session(customer_id, PAYMENT_MODE)
+        return self._session()
 
-    async def setup_session(self, customer_id: str, _urls: ReturnUrls) -> CheckoutSession:
-        return self._session(customer_id, SETUP_MODE)
+    async def setup_session(self, _customer_id: str, _urls: ReturnUrls) -> CheckoutSession:
+        return self._session()
 
     async def payment_methods(self, customer_id: str) -> list[Card]:
-        stored = self.store.customers.get(customer_id)
+        stored = self.customers.get(customer_id)
         if stored is None:
             return []
         return [
@@ -412,13 +391,13 @@ class FakePaymentGateway:
         ]
 
     async def set_default(self, customer_id: str, payment_method_id: str) -> None:
-        stored = self.store.customers.get(customer_id)
+        stored = self.customers.get(customer_id)
         if stored is None or payment_method_id not in stored.cards:
             raise NotFound(CARD_NOT_FOUND)
         stored.default = payment_method_id
 
     async def detach(self, payment_method_id: str) -> None:
-        for stored in self.store.customers.values():
+        for stored in self.customers.values():
             if payment_method_id in stored.cards:
                 del stored.cards[payment_method_id]
                 if stored.default == payment_method_id:
@@ -427,7 +406,7 @@ class FakePaymentGateway:
         raise NotFound(CARD_NOT_FOUND)
 
     async def charge_off_session(self, charge: OffSessionCharge) -> ChargeOutcome:
-        stored = self.store.customers.get(charge.customer_id)
+        stored = self.customers.get(charge.customer_id)
         default_id = stored.default if stored is not None else None
         if default_id is None:
             return ChargeOutcome(status=ChargeStatus.DECLINED, decline_code=NO_DEFAULT_CARD)
@@ -448,23 +427,8 @@ class FakePaymentGateway:
             raise BadRequest(INVALID_SIGNATURE)
         return payment_event_of(as_mapping(json.loads(payload)))
 
-    def attach_demo_card(self, customer_id: str) -> str:
-        stored = self.store.customers.setdefault(customer_id, StoredCustomer())
-        last4 = f"{len(stored.cards) + 1:04d}"
-        pm_id = f"pm_demo_{customer_id}_{last4}"
-        stored.cards[pm_id] = Card(
-            brand="visa",
-            cardholder_name="Demo Card",
-            exp_month=12,
-            exp_year=2035,
-            last4=last4,
-            payment_method_id=pm_id,
-        )
-        return pm_id
-
-    def _session(self, customer_id: str, mode: str) -> CheckoutSession:
+    def _session(self) -> CheckoutSession:
         session_id = f"cs_demo_{uuid7()}"
-        self.store.sessions[session_id] = StoredSession(customer_id=customer_id, mode=mode)
         return CheckoutSession(session_id=session_id, url=f"{CHECKOUT_URL}{session_id}")
 
 

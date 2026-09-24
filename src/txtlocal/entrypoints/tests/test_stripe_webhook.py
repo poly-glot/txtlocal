@@ -24,7 +24,7 @@ from txtlocal.slices.billing.gateway import (
     SETUP_MODE,
     PaymentEvent,
 )
-from txtlocal.slices.billing.tests.fakes import INVOICE_URL, FakePaymentGateway
+from txtlocal.slices.billing.tests.fakes import INVOICE_URL, SEED_DECLINING, FakePaymentGateway
 
 NOW = datetime(2026, 9, 19, 12, 0, tzinfo=UTC)
 ACCOUNT_ID = "acc-1"
@@ -140,7 +140,7 @@ async def test_handle_credits_a_checkout_that_created_no_invoice() -> None:
 async def test_handle_sets_the_new_card_default_on_setup_succeeded() -> None:
     gateway = gateway_over()
     customer_id = await gateway.ensure_customer("acc-1", "a@b.example")
-    new_pm = gateway.attach_demo_card(customer_id)
+    new_pm = SEED_DECLINING.payment_method_id
     webhook = webhook_over(FakeBilling(), gateway)
     payload = json.dumps(
         {
