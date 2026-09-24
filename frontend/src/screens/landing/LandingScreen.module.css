@@ -1,0 +1,51 @@
+.band {
+  padding: calc(var(--space-8) * 3) 0;
+}
+
+.eyebrow {
+  color: var(--brand);
+  font: var(--type-caption-caps);
+  letter-spacing: var(--tracking-caption-caps);
+  text-transform: uppercase;
+}
+
+.heading {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  text-align: center;
+}
+
+.inner {
+  margin: 0 auto;
+  max-width: 1344px;
+  padding: 0 var(--space-6);
+  width: 100%;
+}
+
+.lead {
+  color: var(--ink-muted);
+  font: var(--type-body-sm);
+  margin: 0;
+  max-width: 480px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  background: var(--canvas);
+  min-height: 100vh;
+}
+
+.sunken {
+  background: var(--surface-sunken);
+}
+
+.title {
+  font: var(--type-heading-lg);
+  margin: 0;
+}

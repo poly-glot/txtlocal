@@ -1,0 +1,65 @@
+.github {
+  align-items: center;
+  color: var(--ink);
+  display: flex;
+
+  &:hover {
+    color: var(--brand);
+  }
+}
+
+.header {
+  align-items: center;
+  background: var(--surface);
+  border-bottom: var(--border-width-hairline) solid var(--border);
+  display: flex;
+  height: 72px;
+}
+
+.inner {
+  composes: inner from "./LandingScreen.module.css";
+  align-items: center;
+  display: flex;
+  gap: var(--space-6);
+}
+
+.link {
+  color: var(--ink-secondary);
+  font: var(--type-body);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--ink);
+  }
+}
+
+.mark {
+  fill: currentcolor;
+  height: 20px;
+  width: 20px;
+}
+
+.nav {
+  align-items: center;
+  display: flex;
+  flex-grow: 1;
+  gap: var(--space-6);
+  margin-left: var(--space-4);
+
+  @media (width < 720px) {
+    visibility: hidden;
+  }
+}
+
+.signIn {
+  background: none;
+  border: 0;
+  color: var(--brand);
+  cursor: pointer;
+  font: var(--type-link);
+  padding: 0;
+
+  &:hover {
+    color: var(--brand-hover);
+  }
+}

@@ -92,6 +92,10 @@ whose subagent owns the screen; a screen calls whichever routes it needs.
 | Avatar › Messaging Settings | `/account/messaging` | `screens/account/messaging/` | `identity` |
 | Avatar › Billing (seven tabs) | `/billing/<tab>` | `screens/billing/<tab>/` | `billing`, `analytics` for Usage and Usage Reporting |
 | The sign-in callback | `/auth/callback` | `screens/auth/callback/` | `identity` |
+| The landing page, for a signed-out visitor | `/` | `screens/landing/` | none: static, and its buttons start sign-in |
+
+`Shell` shows the landing page instead of redirecting when a signed-out visitor is at `/`; every
+other signed-out path still goes to sign-in.
 
 Automation, Integrations, Reseller and Referrals are out of v1: neither the sidebar nor the avatar
 menu shows them.

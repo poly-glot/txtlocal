@@ -1,0 +1,27 @@
+.brand {
+  align-items: center;
+  color: var(--ink);
+  display: flex;
+  gap: var(--space-3);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--ink);
+  }
+}
+
+.name {
+  font: var(--type-heading-md);
+}
+
+.tile {
+  align-items: center;
+  background: var(--brand);
+  border-radius: var(--radius-md);
+  color: var(--on-brand);
+  display: flex;
+  flex-shrink: 0;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}

@@ -1,0 +1,47 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.copy {
+  display: flex;
+  flex: 1 1 480px;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.eyebrow {
+  composes: eyebrow from "./LandingScreen.module.css";
+}
+
+.headline {
+  font: var(--type-display);
+  letter-spacing: var(--tracking-display);
+  margin: 0;
+  max-width: 520px;
+}
+
+.hero {
+  composes: band from "./LandingScreen.module.css";
+}
+
+.inner {
+  composes: inner from "./LandingScreen.module.css";
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--space-8) * 2);
+}
+
+.lead {
+  color: var(--ink-secondary);
+  margin: 0;
+  max-width: 460px;
+}
+
+.source {
+  composes: button from "@/components/Button/Button.module.css";
+  text-decoration: none;
+}

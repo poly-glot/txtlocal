@@ -21,4 +21,18 @@ describe("Shell", () => {
     expect(navigatedTo(assign).pathname).toBe("/oauth2/authorize");
     expect(screen.queryByText("Page body")).not.toBeInTheDocument();
   });
+
+  it("shows a signed-out visitor at the home page the landing page", async () => {
+    const assign = stubLocation();
+
+    renderShell("/");
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Send SMS your customers actually read",
+      }),
+    ).toBeInTheDocument();
+    expect(assign).not.toHaveBeenCalled();
+  });
 });

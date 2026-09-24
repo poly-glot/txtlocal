@@ -1,0 +1,63 @@
+.body {
+  color: var(--ink-secondary);
+  font: var(--type-body-sm);
+  margin: 0;
+}
+
+.eyebrow {
+  composes: eyebrow from "./LandingScreen.module.css";
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.heading {
+  composes: heading from "./LandingScreen.module.css";
+}
+
+.inner {
+  composes: inner from "./LandingScreen.module.css";
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.name {
+  font: var(--type-heading-sm);
+  margin: 0;
+}
+
+.number {
+  align-items: center;
+  background: var(--surface-selected);
+  border-radius: var(--radius-full);
+  color: var(--brand);
+  display: flex;
+  font: var(--type-heading-sm);
+  font-weight: 700;
+  height: 40px;
+  justify-content: center;
+  width: 40px;
+}
+
+.step {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.steps {
+  composes: band from "./LandingScreen.module.css";
+}
+
+.title {
+  composes: title from "./LandingScreen.module.css";
+}

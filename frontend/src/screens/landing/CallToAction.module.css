@@ -1,0 +1,23 @@
+.cta {
+  background: var(--surface-selected);
+  padding: calc(var(--space-10) * 2) 0;
+}
+
+.inner {
+  composes: inner from "./LandingScreen.module.css";
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  text-align: center;
+}
+
+.lead {
+  color: var(--ink-secondary);
+  margin: 0;
+  max-width: 440px;
+}
+
+.title {
+  composes: title from "./LandingScreen.module.css";
+}

@@ -3,3 +3,4 @@ export const API_DOCS_PATH = "/developer/docs";
 export const BILLING_PATH = "/billing";
 export const BILLING_TOP_UP_PATH = "/billing/top-up";
 export const CALLBACK_PATH = "/auth/callback";
+export const GITHUB_URL = "https://github.com/poly-glot/txtlocal";

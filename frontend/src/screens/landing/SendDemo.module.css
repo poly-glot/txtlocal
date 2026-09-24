@@ -1,0 +1,123 @@
+.avatar {
+  align-items: center;
+  border-radius: var(--radius-full);
+  color: var(--on-brand);
+  display: flex;
+  flex-shrink: 0;
+  font: var(--type-caption-caps);
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+
+  &[data-tone="accent"] {
+    background: var(--accent);
+  }
+
+  &[data-tone="brand"] {
+    background: var(--brand);
+  }
+
+  &[data-tone="muted"] {
+    background: var(--ink-muted);
+  }
+}
+
+.badge {
+  background: var(--surface-sunken);
+  border-radius: var(--radius-full);
+  color: var(--ink-muted);
+  font: var(--type-caption-caps);
+  letter-spacing: var(--tracking-caption-caps);
+  padding: var(--space-1) 10px;
+  text-transform: uppercase;
+
+  &[data-delivered="true"] {
+    background: var(--surface-selected);
+    color: var(--brand);
+  }
+}
+
+.caption {
+  color: var(--ink-muted);
+  font: var(--type-caption-caps);
+  letter-spacing: var(--tracking-caption-caps);
+  text-transform: uppercase;
+}
+
+.card {
+  background: var(--surface);
+  border: var(--border-width-hairline) solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex: 1 1 420px;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: var(--space-6);
+}
+
+.dot {
+  background: var(--accent);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  height: 8px;
+  width: 8px;
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.message {
+  background: var(--surface-sunken);
+  border-radius: var(--radius-md);
+  margin: 0;
+  padding: var(--space-4);
+}
+
+.name {
+  flex-grow: 1;
+  font: var(--type-body-strong);
+}
+
+.receipt {
+  align-items: center;
+  border-bottom: var(--border-width-hairline) solid var(--border);
+  display: flex;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+}
+
+.recipient {
+  align-items: center;
+  display: flex;
+  gap: var(--space-3);
+}
+
+.recipients {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.status {
+  color: var(--ink-muted);
+  font: var(--type-caption-caps);
+  letter-spacing: var(--tracking-caption-caps);
+  margin-left: auto;
+  text-transform: uppercase;
+}
+
+.tick {
+  color: var(--accent);
+  display: flex;
+}
+
+.title {
+  font: var(--type-heading-md);
+}

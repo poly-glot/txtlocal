@@ -1,0 +1,58 @@
+.benefit {
+  align-items: flex-start;
+  display: flex;
+  gap: var(--space-3);
+}
+
+.benefits {
+  composes: band sunken from "./LandingScreen.module.css";
+}
+
+.body {
+  color: var(--ink-secondary);
+  font: var(--type-body-sm);
+}
+
+.copy {
+  display: flex;
+  flex: 1 1 480px;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.inner {
+  composes: inner from "./LandingScreen.module.css";
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--space-8) * 2);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.name {
+  font: var(--type-body-strong);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tick {
+  color: var(--brand);
+  display: flex;
+  margin-top: 2px;
+}
+
+.title {
+  composes: title from "./LandingScreen.module.css";
+}
