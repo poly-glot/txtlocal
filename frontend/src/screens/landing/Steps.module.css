@@ -63,20 +63,14 @@
 }
 
 .step {
-  composes: card from "./LandingScreen.module.css";
+  composes: card lift from "./LandingScreen.module.css";
   align-items: flex-start;
   display: flex;
   gap: var(--space-5);
   padding: var(--space-5) var(--space-6);
   position: relative;
-  transition:
-    border-color 200ms ease,
-    box-shadow 200ms ease,
-    transform 200ms ease;
 
   &:hover {
-    border-color: color-mix(in srgb, var(--brand) 35%, var(--border));
-    box-shadow: var(--shadow-lift);
     transform: translateX(4px);
   }
 

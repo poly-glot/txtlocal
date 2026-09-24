@@ -36,6 +36,18 @@
   max-width: 560px;
 }
 
+.lift {
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--brand) 35%, var(--border));
+    box-shadow: var(--shadow-lift);
+  }
+}
+
 .main {
   display: flex;
   flex-direction: column;

@@ -5,19 +5,13 @@
 }
 
 .feature {
-  composes: card from "./LandingScreen.module.css";
+  composes: card lift from "./LandingScreen.module.css";
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
   padding: var(--space-6);
-  transition:
-    border-color 200ms ease,
-    box-shadow 200ms ease,
-    transform 200ms ease;
 
   &:hover {
-    border-color: color-mix(in srgb, var(--brand) 35%, var(--border));
-    box-shadow: var(--shadow-lift);
     transform: translateY(-4px);
   }
 }

@@ -9,8 +9,6 @@
 
 .code {
   color: var(--code-ink);
-  display: flex;
-  flex-direction: column;
   font:
     400 13px/22px ui-monospace,
     SFMono-Regular,
@@ -36,25 +34,6 @@
 .file {
   color: var(--code-muted);
   font: var(--type-body-sm);
-}
-
-.line {
-  white-space: pre;
-}
-
-.token {
-  &[data-kind="command"] {
-    color: var(--code-accent);
-    font-weight: 700;
-  }
-
-  &[data-kind="flag"] {
-    color: var(--code-muted);
-  }
-
-  &[data-kind="string"] {
-    color: var(--code-string);
-  }
 }
 
 .window {

@@ -289,20 +289,9 @@ class BillingDynamoRepo:
     async def save_stripe_customer_id(
         self, account_id: str, customer_id: str, replacing: str | None
     ) -> bool:
-        if replacing is None:
-            return await self._update(
-                account_key(account_id),
-                SET_STRIPE_CUSTOMER,
-                {":id": s(customer_id)},
-                IF_NO_STRIPE_CUSTOMER,
-            )
-
-        return await self._update(
-            account_key(account_id),
-            SET_STRIPE_CUSTOMER,
-            {":id": s(customer_id), ":stale": s(replacing)},
-            IF_STRIPE_CUSTOMER_IS,
-        )
+        values = {":id": s(customer_id)} | ({} if replacing is None else {":stale": s(replacing)})
+        condition = IF_NO_STRIPE_CUSTOMER if replacing is None else IF_STRIPE_CUSTOMER_IS
+        return await self._update(account_key(account_id), SET_STRIPE_CUSTOMER, values, condition)
 
     async def set_recharge_in_flight(self, account_id: str, now: datetime) -> bool:
         return await self._update(

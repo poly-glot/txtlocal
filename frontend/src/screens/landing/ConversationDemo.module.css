@@ -29,9 +29,7 @@
   margin-top: var(--space-1);
 }
 
-.inbound {
-  align-self: flex-start;
-  background: var(--surface-sunken);
+.bubble {
   border-radius: var(--radius-md);
   font: var(--type-body-sm);
   margin: 0;
@@ -39,14 +37,16 @@
   padding: var(--space-3) 14px;
 }
 
+.inbound {
+  composes: bubble;
+  align-self: flex-start;
+  background: var(--surface-sunken);
+}
+
 .outbound {
+  composes: bubble;
   align-self: flex-end;
   background: var(--surface-selected);
-  border-radius: var(--radius-md);
-  font: var(--type-body-sm);
-  margin: 0;
-  max-width: 260px;
-  padding: var(--space-3) 14px;
 }
 
 .repliedBy {
