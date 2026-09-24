@@ -29,9 +29,6 @@ describe("AvatarMenu", () => {
       "Messaging Settings",
       "Billing",
       "Global Sending",
-      "Reseller Clients",
-      "Reseller Settings",
-      "Referrals",
     ]) {
       expect(screen.getByRole("link", { name: label })).toBeInTheDocument();
     }

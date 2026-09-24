@@ -1,9 +1,30 @@
-from dataclasses import dataclass, field
+import json
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
-from uuid import UUID
+from uuid import UUID, uuid7
 
+from txtlocal.shared.errors import BadRequest, NotFound
 from txtlocal.shared.money import Micro
+from txtlocal.slices.billing.gateway import (
+    INVALID_SIGNATURE,
+    NO_DEFAULT_CARD,
+    PAYMENT_MODE,
+    SETUP_MODE,
+    Card,
+    ChargeOutcome,
+    ChargeStatus,
+    CheckoutSession,
+    Invoice,
+    OffSessionCharge,
+    Pack,
+    PaymentEvent,
+    PaymentGateway,
+    ReturnUrls,
+    as_mapping,
+    payment_event_of,
+    signature_fields,
+)
 from txtlocal.slices.billing.model import (
     BillingAccount,
     LedgerEntry,
@@ -19,7 +40,7 @@ from txtlocal.slices.billing.repo import (
     ledger_sort_key,
     rental_event_id,
 )
-from txtlocal.slices.billing.service import AccountContacts, BillingService, Email
+from txtlocal.slices.billing.service import CARD_NOT_FOUND, AccountContacts, BillingService, Email
 
 if TYPE_CHECKING:
     from txtlocal.slices.messaging.model import Product
@@ -316,4 +337,136 @@ class RecordingEmail:
 
 
 def _fits_email(fake: RecordingEmail) -> Email:
+    return fake
+
+
+CHECKOUT_URL = "https://checkout.stripe.com/c/pay/"
+INVOICE_URL = "https://invoice.stripe.com/i/"
+SEED_VISA = Card(
+    brand="visa",
+    cardholder_name="Demo Card",
+    exp_month=12,
+    exp_year=2035,
+    last4="4242",
+    payment_method_id="pm_demo_4242",
+    is_default=True,
+)
+SEED_DECLINING = Card(
+    brand="visa",
+    cardholder_name="Demo Card",
+    exp_month=12,
+    exp_year=2035,
+    last4="0002",
+    payment_method_id="pm_demo_0002",
+)
+
+
+@dataclass(slots=True)
+class StoredCustomer:
+    cards: dict[str, Card] = field(default_factory=dict)
+    default: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class StoredSession:
+    customer_id: str
+    mode: str
+
+
+@dataclass(slots=True)
+class FakeStore:
+    customers: dict[str, StoredCustomer] = field(default_factory=dict)
+    sessions: dict[str, StoredSession] = field(default_factory=dict)
+
+
+@dataclass(frozen=True, slots=True)
+class FakePaymentGateway:
+    store: FakeStore = field(default_factory=FakeStore)
+
+    async def ensure_customer(self, _account_id: str, _email: str) -> str:
+        customer_id = f"cus_demo_{uuid7()}"
+        self.store.customers[customer_id] = StoredCustomer(
+            cards={
+                SEED_VISA.payment_method_id: SEED_VISA,
+                SEED_DECLINING.payment_method_id: SEED_DECLINING,
+            },
+            default=SEED_VISA.payment_method_id,
+        )
+        return customer_id
+
+    async def checkout(
+        self, customer_id: str, _pack: Pack, _urls: ReturnUrls, _idempotency_key: str
+    ) -> CheckoutSession:
+        return self._session(customer_id, PAYMENT_MODE)
+
+    async def setup_session(self, customer_id: str, _urls: ReturnUrls) -> CheckoutSession:
+        return self._session(customer_id, SETUP_MODE)
+
+    async def payment_methods(self, customer_id: str) -> list[Card]:
+        stored = self.store.customers.get(customer_id)
+        if stored is None:
+            return []
+        return [
+            replace(card, is_default=pm_id == stored.default)
+            for pm_id, card in stored.cards.items()
+        ]
+
+    async def set_default(self, customer_id: str, payment_method_id: str) -> None:
+        stored = self.store.customers.get(customer_id)
+        if stored is None or payment_method_id not in stored.cards:
+            raise NotFound(CARD_NOT_FOUND)
+        stored.default = payment_method_id
+
+    async def detach(self, payment_method_id: str) -> None:
+        for stored in self.store.customers.values():
+            if payment_method_id in stored.cards:
+                del stored.cards[payment_method_id]
+                if stored.default == payment_method_id:
+                    stored.default = None
+                return
+        raise NotFound(CARD_NOT_FOUND)
+
+    async def charge_off_session(self, charge: OffSessionCharge) -> ChargeOutcome:
+        stored = self.store.customers.get(charge.customer_id)
+        default_id = stored.default if stored is not None else None
+        if default_id is None:
+            return ChargeOutcome(status=ChargeStatus.DECLINED, decline_code=NO_DEFAULT_CARD)
+        if default_id == SEED_DECLINING.payment_method_id:
+            return ChargeOutcome(status=ChargeStatus.DECLINED, decline_code="card_declined")
+        return ChargeOutcome(
+            status=ChargeStatus.SUCCEEDED, provider_ref=f"pi_demo_{charge.idempotency_key}"
+        )
+
+    async def invoice(self, invoice_id: str) -> Invoice:
+        return Invoice(
+            number=f"INV-{invoice_id.removeprefix('in_')}", url=f"{INVOICE_URL}{invoice_id}"
+        )
+
+    def verify_webhook(self, payload: bytes, signature: str, _now: datetime) -> PaymentEvent:
+        values = [value for name, value in signature_fields(signature) if name == "v1"]
+        if values != ["fake"]:
+            raise BadRequest(INVALID_SIGNATURE)
+        return payment_event_of(as_mapping(json.loads(payload)))
+
+    def attach_demo_card(self, customer_id: str) -> str:
+        stored = self.store.customers.setdefault(customer_id, StoredCustomer())
+        last4 = f"{len(stored.cards) + 1:04d}"
+        pm_id = f"pm_demo_{customer_id}_{last4}"
+        stored.cards[pm_id] = Card(
+            brand="visa",
+            cardholder_name="Demo Card",
+            exp_month=12,
+            exp_year=2035,
+            last4=last4,
+            payment_method_id=pm_id,
+        )
+        return pm_id
+
+    def _session(self, customer_id: str, mode: str) -> CheckoutSession:
+        session_id = f"cs_demo_{uuid7()}"
+        self.store.sessions[session_id] = StoredSession(customer_id=customer_id, mode=mode)
+        return CheckoutSession(session_id=session_id, url=f"{CHECKOUT_URL}{session_id}")
+
+
+def _fits_gateway(fake: FakePaymentGateway) -> PaymentGateway:
     return fake

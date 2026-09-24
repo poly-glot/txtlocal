@@ -14,17 +14,14 @@ Where this product departs from the screens on purpose the departure is stated w
 
 - Sidebar
   - `Home`
-  - `Automation` (excluded from v1, see the end of this file)
   - `Contacts`
   - `Sender IDs` › `Manage Senders` (tabs `Smart Senders` | `My Numbers` | `Alpha Tags`), `Buy A Number`
   - `SMS` › `Quick SMS`, `SMS Campaign`, `Website Registration`, `Templates`, `Email SMS`, `Messenger`, `History`
   - `MMS` › `Quick MMS`, `MMS Campaign`, `History`
-  - `Integrations` (excluded from v1)
   - `Developers` › `API Credentials`, `API Logs`, `API Documentation`, `Libraries & SDKs`, `Webhooks`
   - collapse chevron bottom-left
 - Avatar menu: `User ID: <id>`, `My Profile`, `Account Settings`, `Messaging Settings`, `Billing`,
-  `Global Sending`, `Reseller Clients` (excluded), `Reseller Settings` (excluded), `Referrals`
-  (excluded), `Logout`
+  `Global Sending`, `Logout`
 - Billing tab strip, page header `Billing`: `Top Up Account`, `Manage Credit Cards`, `Transactions`,
   `Usage`, `Usage Reporting`, `General`, `Upcoming Charges`
 - API Credentials tabs: `Subaccounts`, `General`
@@ -1129,9 +1126,9 @@ None; rows are facts.
 
 ## Excluded from v1
 
-- `Automation` and the Automation Builder (the `£0.0009` product line is not rendered).
-- `Integrations`.
-- `Reseller Clients`, `Reseller Settings`, `Referrals`.
+- `Automation` and the Automation Builder (the `£0.0009` product line is not rendered), and
+  `Integrations`, which the sidebar leaves out.
+- `Reseller Clients`, `Reseller Settings` and `Referrals`, which the avatar menu leaves out.
 - `Global Sending` beyond the country allow-list `SMS_ALLOWED_COUNTRIES`; the link in Smart Senders
   opens Account Settings, which shows the enabled countries read-only.
 - Fax and Voice, including the channel wording on the Email SMS notice.

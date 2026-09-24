@@ -66,17 +66,26 @@ a raised one may itself need AWS review.
   going forward, which is why it is safe to attempt `live` during a low-traffic window rather than
   needing a separate rollback plan.
 
-## 4. The Stripe live keys
+## 4. The Stripe sandbox and the live keys
 
-- `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET` are read once in `wiring.py` with empty-string
-  defaults (there is no local Stripe account; `billing.stripe` is exercised locally through the
-  scripted fake gateway per `docs/testing.md`). Going live means setting both to the real Stripe
-  account's live-mode values in `aws-cloud`'s deploy configuration, the same mechanism as any other
-  environment variable here.
-- Create the live-mode webhook endpoint in the Stripe dashboard pointed at the deployed
-  `stripe-webhook` function URL before flipping the key, so the first live event has somewhere to
-  land; `entrypoints/stripe_webhook.py` answers 200 for every terminal outcome so Stripe stops
-  redelivering (`CLAUDE.md` section 4).
+- There is no fake payment gateway: every stage talks to Stripe, and until this step it is a Stripe
+  sandbox of its own, so no other app's events reach the endpoint. `STRIPE_SECRET_KEY` and
+  `STRIPE_WEBHOOK_SECRET` are read once in `wiring.py`; `aws-cloud` fills them from the
+  `TXTLOCAL_STRIPE_SECRET_KEY` and `TXTLOCAL_STRIPE_WEBHOOK_SECRET` repository secrets and refuses to
+  plan without them. An empty webhook secret refuses every event rather than trusting an HMAC anyone
+  could compute.
+- The deployed endpoint is the `stripe-webhook` function URL (`url = "public"`, not a CloudFront
+  path), listening for `checkout.session.completed`, `payment_intent.succeeded` and
+  `setup_intent.succeeded`; its signing secret is `TXTLOCAL_STRIPE_WEBHOOK_SECRET`.
+- On a laptop the sandbox key goes in `.env` as `STRIPE_SECRET_KEY`, and
+  `stripe listen --api-key "$STRIPE_SECRET_KEY" --forward-to localhost:3000/api/stripe-webhook` on
+  the host delivers the events to the route `wiring.py` mounts only beside DynamoDB Local; the
+  `whsec_` it prints is `STRIPE_WEBHOOK_SECRET`.
+- Going live means setting both secrets to the live-mode values, the same mechanism as any other
+  environment variable here. Create the live-mode webhook endpoint in the Stripe dashboard, pointed
+  at the same function URL with the same three events, before flipping the key, so the first live
+  event has somewhere to land; `entrypoints/stripe_webhook.py` answers 200 for every terminal
+  outcome so Stripe stops redelivering (`CLAUDE.md` section 4).
 - A stored webhook signing secret is HMAC input on every delivery and cannot be hashed at rest
   (`CLAUDE.md` section 1); treat it exactly as the Stripe secret key itself, not as a password.
 - Confirm with one real low-value top-up before announcing anything: `billing.service`'s conditional

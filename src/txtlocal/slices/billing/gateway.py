@@ -1,31 +1,22 @@
 import hmac
 import json
-import uuid
 from collections.abc import Mapping
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
 from hashlib import sha256
-from http import HTTPStatus
-from typing import TYPE_CHECKING, Protocol, cast
+from typing import Protocol, cast
 
 import httpx
-from fastapi import APIRouter, Response
-from fastapi.responses import HTMLResponse, RedirectResponse
 
-from txtlocal.shared.errors import BadRequest, NotFound, Upstream
-from txtlocal.shared.money import MICRO_PER_PENCE, Micro, format_price, micro_to_pence
-
-if TYPE_CHECKING:
-    from txtlocal.shared.clock import Clock
+from txtlocal.shared.errors import BadRequest, Upstream
+from txtlocal.shared.money import MICRO_PER_PENCE, Micro, micro_to_pence
 
 CONNECT_TIMEOUT_SECONDS = 5.0
 TOTAL_TIMEOUT_SECONDS = 30.0
 SIGNATURE_TOLERANCE_SECONDS = 300
 STRIPE_API = "https://api.stripe.com/v1"
 
-CARD_NOT_FOUND = "No saved card with that id"
-DEMO_NOT_FOUND = "This demo checkout session has expired"
 INVALID_SIGNATURE = "Invalid webhook signature"
 NO_DEFAULT_CARD = "no_default_card"
 PAYMENT_MODE = "payment"
@@ -73,6 +64,12 @@ class CheckoutSession:
 
 
 @dataclass(frozen=True, slots=True)
+class Invoice:
+    number: str | None
+    url: str | None
+
+
+@dataclass(frozen=True, slots=True)
 class OffSessionCharge:
     account_id: str
     amount_micro: Micro
@@ -96,6 +93,7 @@ class PaymentEvent:
     account_id: str | None = None
     amount_micro: Micro | None = None
     customer_id: str | None = None
+    invoice_id: str | None = None
     invoice_number: str | None = None
     invoice_url: str | None = None
     kind: str | None = None
@@ -122,11 +120,9 @@ class PaymentGateway(Protocol):
 
     async def charge_off_session(self, charge: OffSessionCharge) -> ChargeOutcome: ...
 
+    async def invoice(self, invoice_id: str) -> Invoice: ...
+
     def verify_webhook(self, payload: bytes, signature: str, now: datetime) -> PaymentEvent: ...
-
-
-class Webhook(Protocol):
-    async def handle(self, payload: bytes, signature: str) -> object: ...
 
 
 def as_mapping(value: object) -> Mapping[str, object]:
@@ -151,7 +147,6 @@ def amount_micro_of(fields: Mapping[str, object]) -> Micro | None:
 def payment_event_of(body: Mapping[str, object]) -> PaymentEvent:
     fields = as_mapping(as_mapping(body.get("data")).get("object"))
     metadata = as_mapping(fields.get("metadata"))
-    invoice = as_mapping(fields.get("invoice"))
 
     return PaymentEvent(
         event_id=string_field(body, "id") or "",
@@ -159,8 +154,7 @@ def payment_event_of(body: Mapping[str, object]) -> PaymentEvent:
         account_id=string_field(metadata, "accountId"),
         amount_micro=amount_micro_of(fields),
         customer_id=string_field(fields, "customer"),
-        invoice_number=string_field(invoice, "number"),
-        invoice_url=string_field(invoice, "hosted_invoice_url"),
+        invoice_id=string_field(fields, "invoice"),
         kind=string_field(metadata, "kind"),
         mode=string_field(fields, "mode"),
         payment_method_id=string_field(fields, "payment_method"),
@@ -267,12 +261,22 @@ class StripeGateway:
             return charge_outcome_of(body)
         return declined_outcome_of(body, response.status_code)
 
+    async def invoice(self, invoice_id: str) -> Invoice:
+        response = await self._get(f"/invoices/{invoice_id}")
+        return Invoice(
+            number=string_field(response, "number"),
+            url=string_field(response, "hosted_invoice_url"),
+        )
+
     def verify_webhook(self, payload: bytes, signature: str, now: datetime) -> PaymentEvent:
         if not self._signature_valid(payload, signature, now):
             raise BadRequest(INVALID_SIGNATURE)
         return payment_event_of(as_mapping(json.loads(payload)))
 
     def _signature_valid(self, payload: bytes, signature: str, now: datetime) -> bool:
+        if not self.webhook_secret:
+            return False
+
         fields = signature_fields(signature)
         timestamps = [value for name, value in fields if name == "t"]
         if len(timestamps) != 1 or not timestamps[0].lstrip("-").isdigit():
@@ -377,213 +381,3 @@ def declined_outcome_of(body: Mapping[str, object], status_code: int) -> ChargeO
     return ChargeOutcome(
         status=ChargeStatus.ERRORED, decline_code=string_field(details, "code") or str(status_code)
     )
-
-
-SEED_VISA = Card(
-    brand="visa",
-    cardholder_name="Demo Card",
-    exp_month=12,
-    exp_year=2035,
-    last4="4242",
-    payment_method_id="pm_demo_4242",
-    is_default=True,
-)
-SEED_DECLINING = Card(
-    brand="visa",
-    cardholder_name="Demo Card",
-    exp_month=12,
-    exp_year=2035,
-    last4="0002",
-    payment_method_id="pm_demo_0002",
-)
-
-
-@dataclass(slots=True)
-class StoredCustomer:
-    cards: dict[str, Card] = field(default_factory=dict)
-    default: str | None = None
-
-
-@dataclass(frozen=True, slots=True)
-class StoredSession:
-    customer_id: str
-    mode: str
-    success_url: str
-    account_id: str | None = None
-    amount_micro: Micro | None = None
-    top_up_id: str | None = None
-
-
-@dataclass(slots=True)
-class FakeStore:
-    customers: dict[str, StoredCustomer] = field(default_factory=dict)
-    sessions: dict[str, StoredSession] = field(default_factory=dict)
-
-
-@dataclass(frozen=True, slots=True)
-class FakePaymentGateway:
-    clock: Clock
-    public_base_url: str
-    store: FakeStore = field(default_factory=FakeStore)
-
-    async def ensure_customer(self, _account_id: str, _email: str) -> str:
-        customer_id = f"cus_demo_{uuid.uuid7()}"
-        self.store.customers[customer_id] = StoredCustomer(
-            cards={
-                SEED_VISA.payment_method_id: SEED_VISA,
-                SEED_DECLINING.payment_method_id: SEED_DECLINING,
-            },
-            default=SEED_VISA.payment_method_id,
-        )
-        return customer_id
-
-    async def checkout(
-        self, customer_id: str, pack: Pack, urls: ReturnUrls, _idempotency_key: str
-    ) -> CheckoutSession:
-        session_id = f"cs_demo_{uuid.uuid7()}"
-        self.store.sessions[session_id] = StoredSession(
-            account_id=pack.account_id,
-            amount_micro=pack.amount_micro,
-            customer_id=customer_id,
-            mode=PAYMENT_MODE,
-            success_url=urls.success_url,
-            top_up_id=pack.top_up_id,
-        )
-        return CheckoutSession(session_id=session_id, url=self._url(session_id))
-
-    async def setup_session(self, customer_id: str, urls: ReturnUrls) -> CheckoutSession:
-        session_id = f"cs_demo_{uuid.uuid7()}"
-        self.store.sessions[session_id] = StoredSession(
-            customer_id=customer_id, mode=SETUP_MODE, success_url=urls.success_url
-        )
-        return CheckoutSession(session_id=session_id, url=self._url(session_id))
-
-    async def payment_methods(self, customer_id: str) -> list[Card]:
-        stored = self.store.customers.get(customer_id)
-        if stored is None:
-            return []
-        return [
-            replace(card, is_default=pm_id == stored.default)
-            for pm_id, card in stored.cards.items()
-        ]
-
-    async def set_default(self, customer_id: str, payment_method_id: str) -> None:
-        stored = self.store.customers.get(customer_id)
-        if stored is None or payment_method_id not in stored.cards:
-            raise NotFound(CARD_NOT_FOUND)
-        stored.default = payment_method_id
-
-    async def detach(self, payment_method_id: str) -> None:
-        for stored in self.store.customers.values():
-            if payment_method_id in stored.cards:
-                del stored.cards[payment_method_id]
-                if stored.default == payment_method_id:
-                    stored.default = None
-                return
-        raise NotFound(CARD_NOT_FOUND)
-
-    async def charge_off_session(self, charge: OffSessionCharge) -> ChargeOutcome:
-        stored = self.store.customers.get(charge.customer_id)
-        default_id = stored.default if stored is not None else None
-        if default_id is None:
-            return ChargeOutcome(status=ChargeStatus.DECLINED, decline_code=NO_DEFAULT_CARD)
-        if default_id == SEED_DECLINING.payment_method_id:
-            return ChargeOutcome(status=ChargeStatus.DECLINED, decline_code="card_declined")
-        return ChargeOutcome(
-            status=ChargeStatus.SUCCEEDED, provider_ref=f"pi_demo_{charge.idempotency_key}"
-        )
-
-    def verify_webhook(self, payload: bytes, signature: str, _now: datetime) -> PaymentEvent:
-        values = [value for name, value in signature_fields(signature) if name == "v1"]
-        if values != ["fake"]:
-            raise BadRequest(INVALID_SIGNATURE)
-        return payment_event_of(as_mapping(json.loads(payload)))
-
-    def attach_demo_card(self, customer_id: str) -> str:
-        stored = self.store.customers.setdefault(customer_id, StoredCustomer())
-        last4 = f"{len(stored.cards) + 1:04d}"
-        pm_id = f"pm_demo_{customer_id}_{last4}"
-        stored.cards[pm_id] = Card(
-            brand="visa",
-            cardholder_name="Demo Card",
-            exp_month=12,
-            exp_year=2035,
-            last4=last4,
-            payment_method_id=pm_id,
-        )
-        return pm_id
-
-    def _url(self, session_id: str) -> str:
-        return f"{self.public_base_url}/api/app/demo/checkout/{session_id}"
-
-
-def checkout_page_html(session_id: str, session: StoredSession) -> str:
-    heading = (
-        "Add a card"
-        if session.mode == SETUP_MODE
-        else f"Pay {format_price(session.amount_micro)}"
-        if session.amount_micro is not None
-        else "Pay"
-    )
-    return (
-        '<!doctype html><html lang="en"><head><meta charset="utf-8">'
-        f"<title>txtlocal demo checkout</title></head><body><h1>{heading}</h1>"
-        f'<form action="/api/app/demo/checkout/{session_id}" method="post">'
-        '<button type="submit">Pay</button></form></body></html>'
-    )
-
-
-def demo_event_body(
-    event_id: str, session_id: str, session: StoredSession, gateway: FakePaymentGateway
-) -> dict[str, object]:
-    if session.mode == SETUP_MODE:
-        payment_method_id = gateway.attach_demo_card(session.customer_id)
-        return {
-            "id": event_id,
-            "type": "setup_intent.succeeded",
-            "data": {
-                "object": {
-                    "id": f"seti_demo_{session_id}",
-                    "customer": session.customer_id,
-                    "payment_method": payment_method_id,
-                }
-            },
-        }
-    invoice_url = f"{gateway.public_base_url}/api/app/demo/invoice/{session_id}"
-    return {
-        "id": event_id,
-        "type": "checkout.session.completed",
-        "data": {
-            "object": {
-                "id": session_id,
-                "customer": session.customer_id,
-                "invoice": {"hosted_invoice_url": invoice_url, "number": f"DEMO-{session_id[-8:]}"},
-                "metadata": {"accountId": session.account_id, "topUpId": session.top_up_id},
-            }
-        },
-    }
-
-
-def build_demo_router(gateway: FakePaymentGateway, webhook: Webhook) -> APIRouter:
-    router = APIRouter(prefix="/api/app/demo")
-
-    @router.get("/checkout/{session_id}")
-    async def checkout_page(session_id: str) -> Response:
-        session = gateway.store.sessions.get(session_id)
-        if session is None:
-            return HTMLResponse(DEMO_NOT_FOUND, status_code=HTTPStatus.NOT_FOUND)
-        return HTMLResponse(checkout_page_html(session_id, session))
-
-    @router.post("/checkout/{session_id}")
-    async def pay(session_id: str) -> Response:
-        session = gateway.store.sessions.get(session_id)
-        if session is None:
-            return HTMLResponse(DEMO_NOT_FOUND, status_code=HTTPStatus.NOT_FOUND)
-
-        event_id = f"evt_demo_{session_id}"
-        body = json.dumps(demo_event_body(event_id, session_id, session, gateway)).encode()
-        signature = f"t={int(gateway.clock().timestamp())},v1=fake"
-        await webhook.handle(body, signature)
-        return RedirectResponse(session.success_url, status_code=HTTPStatus.FOUND)
-
-    return router

@@ -1,23 +1,30 @@
 import json
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from http import HTTPStatus
 
 import pytest
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
 
 from txtlocal.entrypoints.stripe_webhook import (
+    LOCAL_PATH,
+    SIGNATURE_HEADER,
     Billing,
     StripeWebhook,
     WebhookAnswer,
     WebhookOutcome,
+    build_local_router,
 )
 from txtlocal.shared.errors import BadRequest
 from txtlocal.shared.money import Micro
 from txtlocal.slices.billing.gateway import (
+    INVALID_SIGNATURE,
     RECHARGE_KIND,
     SETUP_MODE,
-    FakePaymentGateway,
     PaymentEvent,
 )
+from txtlocal.slices.billing.tests.fakes import INVOICE_URL, FakePaymentGateway
 
 NOW = datetime(2026, 9, 19, 12, 0, tzinfo=UTC)
 ACCOUNT_ID = "acc-1"
@@ -42,7 +49,7 @@ def _fits(fake: FakeBilling) -> Billing:
 
 
 def gateway_over() -> FakePaymentGateway:
-    return FakePaymentGateway(clock=lambda: NOW, public_base_url="http://localhost:3000")
+    return FakePaymentGateway()
 
 
 def webhook_over(billing: FakeBilling, gateway: FakePaymentGateway) -> StripeWebhook:
@@ -53,7 +60,9 @@ def fake_signature() -> str:
     return f"t={int(NOW.timestamp())},v1=fake"
 
 
-def checkout_completed_payload(account_id: str, top_up_id: str) -> bytes:
+def checkout_completed_payload(
+    account_id: str, top_up_id: str, invoice_id: str | None = "in_1"
+) -> bytes:
     return json.dumps(
         {
             "id": "evt_1",
@@ -61,10 +70,7 @@ def checkout_completed_payload(account_id: str, top_up_id: str) -> bytes:
             "data": {
                 "object": {
                     "customer": "cus_1",
-                    "invoice": {
-                        "hosted_invoice_url": "https://stripe.example/i/1",
-                        "number": "INV-1",
-                    },
+                    "invoice": invoice_id,
                     "metadata": {"accountId": account_id, "topUpId": top_up_id},
                 }
             },
@@ -109,6 +115,26 @@ async def test_handle_credits_a_completed_checkout() -> None:
     assert len(billing.credited) == 1
     assert (billing.credited[0].account_id, billing.credited[0].top_up_id) == ("acc-1", "top-1")
     assert billing.credited[0].invoice_number == "INV-1"
+
+
+async def test_handle_links_the_invoice_stripe_created_for_the_checkout() -> None:
+    billing = FakeBilling()
+    webhook = webhook_over(billing, gateway_over())
+
+    await webhook.handle(checkout_completed_payload("acc-1", "top-1"), fake_signature())
+
+    assert billing.credited[0].invoice_url == f"{INVOICE_URL}in_1"
+
+
+async def test_handle_credits_a_checkout_that_created_no_invoice() -> None:
+    billing = FakeBilling()
+    webhook = webhook_over(billing, gateway_over())
+
+    await webhook.handle(checkout_completed_payload("acc-1", "top-1", None), fake_signature())
+
+    assert [(event.top_up_id, event.invoice_number) for event in billing.credited] == [
+        ("top-1", None)
+    ]
 
 
 async def test_handle_sets_the_new_card_default_on_setup_succeeded() -> None:
@@ -186,3 +212,32 @@ async def test_handle_ignores_a_recharge_payment_intent_without_an_account() -> 
 
     assert answer == WebhookAnswer(outcome=WebhookOutcome.IGNORED)
     assert billing.recharged == []
+
+
+def test_local_route_hands_a_signed_event_to_the_webhook() -> None:
+    billing = FakeBilling()
+    app = FastAPI()
+    app.include_router(build_local_router(webhook_over(billing, gateway_over())))
+
+    response = TestClient(app).post(
+        LOCAL_PATH,
+        content=checkout_completed_payload(ACCOUNT_ID, "top-1"),
+        headers={SIGNATURE_HEADER: fake_signature()},
+    )
+
+    assert response.status_code == HTTPStatus.OK
+    assert [event.top_up_id for event in billing.credited] == ["top-1"]
+
+
+def test_local_route_answers_a_bad_signature_with_the_refusal() -> None:
+    app = FastAPI()
+    app.include_router(build_local_router(webhook_over(FakeBilling(), gateway_over())))
+
+    response = TestClient(app).post(
+        LOCAL_PATH, content=b"{}", headers={SIGNATURE_HEADER: "t=1,v1=forged"}
+    )
+
+    assert (response.status_code, response.json()["message"]) == (
+        HTTPStatus.BAD_REQUEST,
+        INVALID_SIGNATURE,
+    )

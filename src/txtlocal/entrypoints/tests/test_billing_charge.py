@@ -11,14 +11,9 @@ from txtlocal.entrypoints.billing_charge import (
 )
 from txtlocal.shared.errors import Internal
 from txtlocal.shared.money import Micro
-from txtlocal.slices.billing.gateway import (
-    SEED_DECLINING,
-    ChargeOutcome,
-    ChargeStatus,
-    FakePaymentGateway,
-    OffSessionCharge,
-)
+from txtlocal.slices.billing.gateway import ChargeOutcome, ChargeStatus, OffSessionCharge
 from txtlocal.slices.billing.model import RechargeJob
+from txtlocal.slices.billing.tests.fakes import SEED_DECLINING, FakePaymentGateway
 
 if TYPE_CHECKING:
     from txtlocal.shared.bus import SqsEvent
@@ -91,7 +86,7 @@ def _fits_charger(fake: ErroringCharger | PendingCharger) -> Charger:
 
 
 async def gateway_with_customer() -> tuple[FakePaymentGateway, str]:
-    gateway = FakePaymentGateway(clock=lambda: NOW, public_base_url="http://localhost:3000")
+    gateway = FakePaymentGateway()
     customer_id = await gateway.ensure_customer(ACCOUNT_ID, "a@b.example")
     return gateway, customer_id
 
