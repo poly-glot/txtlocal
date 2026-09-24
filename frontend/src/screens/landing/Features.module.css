@@ -5,21 +5,31 @@
 }
 
 .feature {
-  align-items: center;
+  composes: card from "./LandingScreen.module.css";
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--brand) 35%, var(--border));
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-4px);
+  }
 }
 
 .features {
-  composes: band sunken from "./LandingScreen.module.css";
+  composes: band from "./LandingScreen.module.css";
 }
 
 .grid {
   display: grid;
-  gap: var(--space-6);
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   list-style: none;
   margin: 0;
   padding: 0;
@@ -30,15 +40,21 @@
 }
 
 .icon {
+  align-items: center;
+  background: var(--surface-selected);
+  border-radius: var(--radius-md);
   color: var(--brand);
   display: flex;
+  height: 40px;
+  justify-content: center;
+  width: 40px;
 }
 
 .inner {
   composes: inner from "./LandingScreen.module.css";
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: calc(var(--space-8) + var(--space-4));
 }
 
 .lead {

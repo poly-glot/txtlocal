@@ -14,9 +14,13 @@ export function CallToAction({ onStart }: Props) {
   return (
     <section className={styles.cta}>
       <div className={styles.inner}>
-        <h2 className={styles.title}>{TITLE}</h2>
-        <p className={styles.lead}>{LEAD}</p>
-        <Button onClick={onStart}>{START_LABEL}</Button>
+        <div className={styles.panel}>
+          <h2 className={styles.title}>{TITLE}</h2>
+          <p className={styles.lead}>{LEAD}</p>
+          <Button onClick={onStart} variant="secondary">
+            {START_LABEL}
+          </Button>
+        </div>
       </div>
     </section>
   );

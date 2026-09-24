@@ -1,6 +1,7 @@
 import styles from "./Steps.module.css";
 
 const EYEBROW = "How it works";
+const LEAD = "Five steps, no sales call and no contract.";
 const TITLE = "From sign-up to sent in five steps";
 const STEPS = [
   {
@@ -23,18 +24,21 @@ export function Steps() {
   return (
     <section className={styles.steps} id="how-it-works">
       <div className={styles.inner}>
-        <div className={styles.heading}>
+        <div className={styles.intro}>
           <span className={styles.eyebrow}>{EYEBROW}</span>
           <h2 className={styles.title}>{TITLE}</h2>
+          <p className={styles.lead}>{LEAD}</p>
         </div>
-        <ol className={styles.grid}>
+        <ol className={styles.list}>
           {STEPS.map((step, index) => (
             <li className={styles.step} key={step.title}>
               <span aria-hidden="true" className={styles.number}>
-                {index + 1}
+                {String(index + 1).padStart(2, "0")}
               </span>
-              <h3 className={styles.name}>{step.title}</h3>
-              <p className={styles.body}>{step.body}</p>
+              <div className={styles.text}>
+                <h3 className={styles.name}>{step.title}</h3>
+                <p className={styles.body}>{step.body}</p>
+              </div>
             </li>
           ))}
         </ol>

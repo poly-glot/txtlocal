@@ -1,32 +1,44 @@
 .github {
   align-items: center;
+  border-radius: var(--radius-full);
   color: var(--ink);
   display: flex;
+  height: 36px;
+  justify-content: center;
+  margin-left: auto;
+  transition: background 150ms ease;
+  width: 36px;
 
   &:hover {
-    color: var(--brand);
+    background: var(--surface-sunken);
+    color: var(--ink);
   }
 }
 
 .header {
   align-items: center;
-  background: var(--surface);
+  backdrop-filter: saturate(180%) blur(12px);
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
   border-bottom: var(--border-width-hairline) solid var(--border);
   display: flex;
-  height: 72px;
+  height: 68px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .inner {
   composes: inner from "./LandingScreen.module.css";
   align-items: center;
   display: flex;
-  gap: var(--space-6);
+  gap: var(--space-5);
 }
 
 .link {
   color: var(--ink-secondary);
   font: var(--type-body);
   text-decoration: none;
+  transition: color 150ms ease;
 
   &:hover {
     color: var(--ink);
@@ -47,7 +59,7 @@
   margin-left: var(--space-4);
 
   @media (width < 720px) {
-    visibility: hidden;
+    display: none;
   }
 }
 
@@ -61,5 +73,9 @@
 
   &:hover {
     color: var(--brand-hover);
+  }
+
+  @media (width < 440px) {
+    display: none;
   }
 }

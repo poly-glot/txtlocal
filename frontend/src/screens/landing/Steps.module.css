@@ -1,6 +1,5 @@
 .body {
   color: var(--ink-secondary);
-  font: var(--type-body-sm);
   margin: 0;
 }
 
@@ -8,54 +7,99 @@
   composes: eyebrow from "./LandingScreen.module.css";
 }
 
-.grid {
-  display: grid;
-  gap: var(--space-6);
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+.inner {
+  composes: inner from "./LandingScreen.module.css";
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--space-8) * 2);
+}
+
+.intro {
+  display: flex;
+  flex: 1 1 320px;
+  flex-direction: column;
+  gap: var(--space-3);
+  position: sticky;
+  top: 108px;
+
+  @media (width < 800px) {
+    position: static;
+  }
+}
+
+.lead {
+  composes: lead from "./LandingScreen.module.css";
+}
+
+.list {
+  display: flex;
+  flex: 1 1 520px;
+  flex-direction: column;
+  gap: var(--space-4);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.heading {
-  composes: heading from "./LandingScreen.module.css";
-}
-
-.inner {
-  composes: inner from "./LandingScreen.module.css";
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
 .name {
-  font: var(--type-heading-sm);
+  font: var(--type-heading-md);
   margin: 0;
 }
 
 .number {
   align-items: center;
-  background: var(--surface-selected);
-  border-radius: var(--radius-full);
-  color: var(--brand);
+  background: linear-gradient(135deg, var(--brand), var(--accent));
+  border-radius: var(--radius-md);
+  color: var(--on-brand);
   display: flex;
-  font: var(--type-heading-sm);
-  font-weight: 700;
-  height: 40px;
+  flex-shrink: 0;
+  font: var(--type-heading-md);
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  height: 48px;
   justify-content: center;
-  width: 40px;
+  width: 48px;
 }
 
 .step {
-  align-items: center;
+  composes: card from "./LandingScreen.module.css";
+  align-items: flex-start;
   display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  text-align: center;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-6);
+  position: relative;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    transform 200ms ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--brand) 35%, var(--border));
+    box-shadow: var(--shadow-lift);
+    transform: translateX(4px);
+  }
+
+  &:not(:last-child)::after {
+    background: linear-gradient(var(--brand), transparent);
+    content: "";
+    height: var(--space-4);
+    left: calc(var(--space-6) + 24px);
+    position: absolute;
+    top: 100%;
+    width: 2px;
+  }
 }
 
 .steps {
   composes: band from "./LandingScreen.module.css";
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-1);
 }
 
 .title {

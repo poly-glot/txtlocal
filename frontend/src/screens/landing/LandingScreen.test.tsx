@@ -29,6 +29,23 @@ describe("LandingScreen", () => {
     );
   });
 
+  it("links the developer section to the API reference", () => {
+    render(<LandingScreen />);
+
+    expect(screen.getByRole("link", { name: "Read the API reference" })).toHaveAttribute(
+      "href",
+      "https://github.com/poly-glot/txtlocal/blob/main/specs/04-developer-api.md",
+    );
+  });
+
+  it("shows the send request a developer would make", () => {
+    render(<LandingScreen />);
+
+    expect(screen.getByRole("figure", { name: "Sending an SMS with curl" })).toHaveTextContent(
+      "curl https://txtlocal.junaid.guru/api/v3/sms/send",
+    );
+  });
+
   it.each([
     { label: "header sign in", name: "Sign in" },
     { label: "trial call to action", name: "Start free trial" },
@@ -45,7 +62,19 @@ describe("LandingScreen", () => {
   });
 
   it.each([
-    { label: "eyebrow", text: "Business SMS, simplified" },
+    { label: "badge", text: "Open source · Runs on AWS Lambda" },
+    { label: "trial promise", text: "£2 trial credit" },
+    { label: "contract promise", text: "No contracts" },
+    { label: "pricing promise", text: "Pay as you go" },
+    { label: "demo progress", text: "2 of 3 delivered" },
+    { label: "developers title", text: "Send your first SMS with one request" },
+    {
+      label: "developers lead",
+      text: "The same account, balance and history as the console, over a REST API with Basic auth.",
+    },
+    { label: "batch point", text: "Up to 1,000 messages in one call, all or nothing" },
+    { label: "schedule point", text: "Schedule any message up to 90 days ahead" },
+    { label: "webhook point", text: "Signed webhooks for delivery reports and replies" },
     {
       label: "hero lead",
       text: "Send one-off texts and campaigns, answer every reply from a shared inbox, and pay only for what you send.",
@@ -67,6 +96,7 @@ describe("LandingScreen", () => {
       text: "A REST API and signed webhooks to send and track messages from your own code.",
     },
     { label: "steps title", text: "From sign-up to sent in five steps" },
+    { label: "steps lead", text: "Five steps, no sales call and no contract." },
     { label: "trial", text: "Every new account gets £2 of trial credit to use within 14 days." },
     { label: "sender step", text: "Register an alpha tag or buy a dedicated number." },
     { label: "import step", text: "Upload a CSV and txtlocal checks every number." },

@@ -37,6 +37,14 @@
   }
 }
 
+.bar {
+  background: var(--surface-sunken);
+  border-radius: var(--radius-full);
+  flex-grow: 1;
+  height: 6px;
+  overflow: hidden;
+}
+
 .caption {
   color: var(--ink-muted);
   font: var(--type-caption-caps);
@@ -45,9 +53,9 @@
 }
 
 .card {
-  background: var(--surface);
-  border: var(--border-width-hairline) solid var(--border);
-  border-radius: var(--radius-lg);
+  composes: card rise from "./LandingScreen.module.css";
+  animation-delay: 120ms;
+  box-shadow: var(--shadow-lift);
   display: flex;
   flex: 1 1 420px;
   flex-direction: column;
@@ -56,12 +64,27 @@
   padding: var(--space-6);
 }
 
+.count {
+  color: var(--ink-muted);
+  font: var(--type-body-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .dot {
   background: var(--accent);
   border-radius: var(--radius-full);
   flex-shrink: 0;
   height: 8px;
   width: 8px;
+}
+
+.fill {
+  background: linear-gradient(90deg, var(--brand), var(--accent));
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+  width: 67%;
 }
 
 .header {
@@ -80,6 +103,12 @@
 .name {
   flex-grow: 1;
   font: var(--type-body-strong);
+}
+
+.progress {
+  align-items: center;
+  display: flex;
+  gap: var(--space-3);
 }
 
 .receipt {

@@ -4,6 +4,7 @@ import styles from "./SendDemo.module.css";
 
 const DEMO_LABEL = "Example campaign sending";
 const MESSAGE = "Your order #4821 has shipped. Track it: txtlocal.junaid.guru/l/4821";
+const PROGRESS = "2 of 3 delivered";
 const RECEIPT = "Delivered to +44 7700 900123 · 0.4s";
 const STATUS = "Sending";
 const TITLE = "Order updates";
@@ -20,6 +21,12 @@ export function SendDemo() {
         <span className={styles.dot} />
         <span className={styles.title}>{TITLE}</span>
         <span className={styles.status}>{STATUS}</span>
+      </div>
+      <div className={styles.progress}>
+        <span className={styles.bar}>
+          <span className={styles.fill} />
+        </span>
+        <span className={styles.count}>{PROGRESS}</span>
       </div>
       <p className={styles.message}>{MESSAGE}</p>
       <div className={styles.receipt}>

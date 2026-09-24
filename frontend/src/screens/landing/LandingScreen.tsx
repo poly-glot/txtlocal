@@ -2,6 +2,7 @@ import { redirectToSignIn } from "@/lib/auth";
 
 import { Benefits } from "./Benefits";
 import { CallToAction } from "./CallToAction";
+import { Developers } from "./Developers";
 import { Features } from "./Features";
 import { Hero } from "./Hero";
 import { LandingFooter } from "./LandingFooter";
@@ -19,6 +20,7 @@ export function LandingScreen() {
       <main className={styles.main}>
         <Hero onStart={startAtHome} />
         <Features />
+        <Developers />
         <Steps />
         <Benefits />
         <CallToAction onStart={startAtHome} />
