@@ -90,8 +90,9 @@ pull request there first.
 | `ATHENA_OUTPUT`, `ATHENA_WORKGROUP`, `GLUE_DATABASE`, `GLUE_TABLE`, `LOGS_BUCKET` | `rollup`                                     | the shared analytics module                        |
 
 Locally `.env.example` becomes `.env`; `scripts/dev.sh` sources it and forces `SMS_MODE=fake` and
-`BUS=local`, so nothing on a laptop can reach AWS. Payments go to a Stripe sandbox even there;
-`docs/runbook.md` section 4 has the two values `.env` needs and the `stripe listen` line.
+`BUS=local`, so nothing on a laptop can reach AWS. Payments go to a Stripe sandbox even there: with
+its secret key in `.env` as `STRIPE_SECRET_KEY`, `scripts/dev.sh` runs `stripe listen` in the dev
+container and forwards the sandbox's webhooks to the API (`docs/runbook.md` section 4).
 
 `.env` is gitignored; the committed `.env.enc` is that file with its values encrypted by SOPS for the
 age recipient in `.sops.yaml`. The matching private key is the `sops-key` secret in the

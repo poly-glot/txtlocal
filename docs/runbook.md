@@ -77,10 +77,11 @@ a raised one may itself need AWS review.
 - The deployed endpoint is the `stripe-webhook` function URL (`url = "public"`, not a CloudFront
   path), listening for `checkout.session.completed`, `payment_intent.succeeded` and
   `setup_intent.succeeded`; its signing secret is `TXTLOCAL_STRIPE_WEBHOOK_SECRET`.
-- On a laptop the sandbox key goes in `.env` as `STRIPE_SECRET_KEY`, and
-  `stripe listen --api-key "$STRIPE_SECRET_KEY" --forward-to localhost:3000/api/stripe-webhook` on
-  the host delivers the events to the route `wiring.py` mounts only beside DynamoDB Local; the
-  `whsec_` it prints is `STRIPE_WEBHOOK_SECRET`.
+- On a laptop the sandbox key goes in `.env` as `STRIPE_SECRET_KEY`. `scripts/dev.sh` then starts
+  `stripe listen` in the dev container, forwarding the three events to the `/api/stripe-webhook`
+  route `wiring.py` mounts only beside DynamoDB Local, and hands the API the `whsec_` the listener
+  prints; its log is `.local/stripe-listen.log`. `STRIPE_WEBHOOK_SECRET` in `.env` is used only when
+  the container has no Stripe CLI, for a listener run on the host.
 - Going live means setting both secrets to the live-mode values, the same mechanism as any other
   environment variable here. Create the live-mode webhook endpoint in the Stripe dashboard, pointed
   at the same function URL with the same three events, before flipping the key, so the first live

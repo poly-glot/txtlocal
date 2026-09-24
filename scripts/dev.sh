@@ -35,6 +35,27 @@ mkdir -p .local
 export API_LOG_FILE="${API_LOG_FILE:-$PWD/.local/api.jsonl}"
 export MEDIA_DIR="${MEDIA_DIR:-$PWD/.local/media}"
 export HOST=0.0.0.0
+
+if [ -n "${STRIPE_SECRET_KEY:-}" ] && command -v stripe >/dev/null; then
+    stripe listen --api-key "$STRIPE_SECRET_KEY" \
+        --events checkout.session.completed,payment_intent.succeeded,setup_intent.succeeded \
+        --forward-to http://localhost:9000/api/stripe-webhook > .local/stripe-listen.log 2>&1 &
+    PIDS+=($!)
+
+    for _ in $(seq 1 30); do
+        grep -q 'Ready!' .local/stripe-listen.log && break
+        sleep 1
+    done
+
+    listen_secret="$(grep -o -m1 'whsec_[A-Za-z0-9]*' .local/stripe-listen.log || true)"
+    if [ -n "$listen_secret" ]; then
+        export STRIPE_WEBHOOK_SECRET="$listen_secret"
+        echo "stripe: forwarding sandbox webhooks to /api/stripe-webhook, log in .local/stripe-listen.log"
+    else
+        echo "stripe listen did not become ready; see .local/stripe-listen.log" >&2
+    fi
+fi
+
 uv run python -m txtlocal.entrypoints.dev_server > >(tee -a "$API_LOG_FILE") 2>&1 &
 PIDS+=($!)
 
